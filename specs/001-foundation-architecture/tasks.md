@@ -26,11 +26,11 @@
 
 **Purpose**: Prepare shared placeholder conventions and protect the skeleton-only boundary before user-story work.
 
-- [ ] T001 Create a skeleton placeholder convention note in `docs/FOUNDATION.md`
-- [ ] T002 [P] Create backend skeleton preservation note in `backend/app/README.md`
-- [ ] T003 [P] Create frontend skeleton preservation note in `frontend/README.md`
-- [ ] T004 [P] Create Docker skeleton preservation note in `docker/README.md`
-- [ ] T005 Add Phase 0 validation command references to `README.md`
+- [X] T001 Create a skeleton placeholder convention note in `docs/FOUNDATION.md`
+- [X] T002 [P] Create backend skeleton preservation note in `backend/app/README.md`
+- [X] T003 [P] Create frontend skeleton preservation note in `frontend/README.md`
+- [X] T004 [P] Create Docker skeleton preservation note in `docker/README.md`
+- [X] T005 Add Phase 0 validation command references to `README.md`
 
 ---
 
@@ -40,12 +40,12 @@
 
 **CRITICAL**: No user story work should begin until this phase is complete.
 
-- [ ] T006 [P] Create backend target root placeholders in `backend/app/.gitkeep`, `backend/app/api/.gitkeep`, `backend/app/core/.gitkeep`, `backend/app/settings/.gitkeep`, `backend/app/shared/.gitkeep`, and `backend/app/workers/.gitkeep`
-- [ ] T007 [P] Create backend module placeholders in `backend/app/modules/auth/.gitkeep`, `backend/app/modules/daily_logs/.gitkeep`, `backend/app/modules/tasks/.gitkeep`, `backend/app/modules/notes/.gitkeep`, `backend/app/modules/imports/.gitkeep`, `backend/app/modules/analytics/.gitkeep`, `backend/app/modules/ai_insights/.gitkeep`, and `backend/app/modules/reports/.gitkeep`
-- [ ] T008 [P] Create frontend root placeholders in `frontend/app/.gitkeep`, `frontend/components/.gitkeep`, `frontend/hooks/.gitkeep`, `frontend/lib/api/.gitkeep`, `frontend/public/.gitkeep`, `frontend/stores/.gitkeep`, and `frontend/types/.gitkeep`
-- [ ] T009 [P] Create frontend feature placeholders in `frontend/features/auth/.gitkeep`, `frontend/features/daily-logs/.gitkeep`, `frontend/features/tasks/.gitkeep`, `frontend/features/notes/.gitkeep`, `frontend/features/imports/.gitkeep`, `frontend/features/analytics/.gitkeep`, `frontend/features/ai-insights/.gitkeep`, and `frontend/features/reports/.gitkeep`
-- [ ] T010 [P] Create Docker support placeholders in `docker/nginx/.gitkeep` and `docker/scripts/.gitkeep`
-- [ ] T011 Document that existing `backend/src/` and `backend/main.py` are pre-existing placeholders and not the Phase 0 target layout in `docs/FOUNDATION.md`
+- [X] T006 [P] Create backend target root placeholders in `backend/app/.gitkeep`, `backend/app/api/.gitkeep`, `backend/app/core/.gitkeep`, `backend/app/settings/.gitkeep`, `backend/app/shared/.gitkeep`, and `backend/app/workers/.gitkeep`
+- [X] T007 [P] Create backend module placeholders in `backend/app/modules/auth/.gitkeep`, `backend/app/modules/daily_logs/.gitkeep`, `backend/app/modules/tasks/.gitkeep`, `backend/app/modules/notes/.gitkeep`, `backend/app/modules/imports/.gitkeep`, `backend/app/modules/analytics/.gitkeep`, `backend/app/modules/ai_insights/.gitkeep`, and `backend/app/modules/reports/.gitkeep`
+- [X] T008 [P] Create frontend root placeholders in `frontend/app/.gitkeep`, `frontend/components/.gitkeep`, `frontend/hooks/.gitkeep`, `frontend/lib/api/.gitkeep`, `frontend/public/.gitkeep`, `frontend/stores/.gitkeep`, and `frontend/types/.gitkeep`
+- [X] T009 [P] Create frontend feature placeholders in `frontend/features/auth/.gitkeep`, `frontend/features/daily-logs/.gitkeep`, `frontend/features/tasks/.gitkeep`, `frontend/features/notes/.gitkeep`, `frontend/features/imports/.gitkeep`, `frontend/features/analytics/.gitkeep`, `frontend/features/ai-insights/.gitkeep`, and `frontend/features/reports/.gitkeep`
+- [X] T010 [P] Create Docker support placeholders in `docker/nginx/.gitkeep` and `docker/scripts/.gitkeep`
+- [X] T011 Document that existing `backend/src/` and `backend/main.py` are pre-existing placeholders and not the Phase 0 target layout in `docs/FOUNDATION.md`
 
 **Checkpoint**: Shared skeleton paths exist and can be inspected before story-specific documentation is finalized.
 
@@ -59,14 +59,14 @@
 
 ### Implementation for User Story 1
 
-- [ ] T012 [US1] Add product purpose and project overview section to `docs/FOUNDATION.md`
-- [ ] T013 [US1] Add v1 in-scope phases and deliverables section to `docs/FOUNDATION.md`
-- [ ] T014 [US1] Add out-of-scope future work section covering UI polish, report exports, Notion API, AI chat, automation, and production hardening in `docs/FOUNDATION.md`
-- [ ] T015 [US1] Add skeleton-only Phase 0 deliverable definition to `docs/FOUNDATION.md`
-- [ ] T016 [US1] Add baseline repository setup inventory linking backend, frontend, docker, env, compose, and docs paths to `docs/FOUNDATION.md`
-- [ ] T017 [US1] Update root project guidance with links to `docs/FOUNDATION.md`, `docs/Plan.md`, and `docs/STACK_AND_STRUCTURE.md` in `README.md`
-- [ ] T018 [US1] Add future environment variable placeholder groups for app, auth, database, Redis, Celery, AI, and frontend settings in `.env.example`
-- [ ] T019 [US1] Add non-runnable service placeholder comments for future frontend, backend, postgres, redis, celery_worker, and later celery_beat services in `docker-compose.yml`
+- [X] T012 [US1] Add product purpose and project overview section to `docs/FOUNDATION.md`
+- [X] T013 [US1] Add v1 in-scope phases and deliverables section to `docs/FOUNDATION.md`
+- [X] T014 [US1] Add out-of-scope future work section covering UI polish, report exports, Notion API, AI chat, automation, and production hardening in `docs/FOUNDATION.md`
+- [X] T015 [US1] Add skeleton-only Phase 0 deliverable definition to `docs/FOUNDATION.md`
+- [X] T016 [US1] Add baseline repository setup inventory linking backend, frontend, docker, env, compose, and docs paths to `docs/FOUNDATION.md`
+- [X] T017 [US1] Update root project guidance with links to `docs/FOUNDATION.md`, `docs/Plan.md`, and `docs/STACK_AND_STRUCTURE.md` in `README.md`
+- [X] T018 [US1] Add future environment variable placeholder groups for app, auth, database, Redis, Celery, AI, and frontend settings in `.env.example`
+- [X] T019 [US1] Add non-runnable service placeholder comments for future frontend, backend, postgres, redis, celery_worker, and later celery_beat services in `docker-compose.yml`
 
 **Checkpoint**: User Story 1 is reviewable independently using `docs/FOUNDATION.md`, `README.md`, `.env.example`, and `docker-compose.yml`.
 
@@ -80,15 +80,15 @@
 
 ### Implementation for User Story 2
 
-- [ ] T020 [US2] Add approved platform decisions table for backend, frontend, database, jobs, AI, and ingestion to `docs/FOUNDATION.md`
-- [ ] T021 [US2] Add backend architecture rules for router, service, repository, database, settings, shared, and workers ownership to `docs/FOUNDATION.md`
-- [ ] T022 [US2] Add frontend architecture rules for app routing, feature logic, components, API client, hooks, stores, and types ownership to `docs/FOUNDATION.md`
-- [ ] T023 [US2] Add naming convention section for snake_case modules, kebab-case specs and branches, PascalCase domain entities, and descriptive job names to `docs/FOUNDATION.md`
-- [ ] T024 [P] [US2] Add backend module ownership notes to `backend/app/modules/auth/README.md`, `backend/app/modules/daily_logs/README.md`, `backend/app/modules/tasks/README.md`, `backend/app/modules/notes/README.md`, `backend/app/modules/imports/README.md`, `backend/app/modules/analytics/README.md`, `backend/app/modules/ai_insights/README.md`, and `backend/app/modules/reports/README.md`
-- [ ] T025 [P] [US2] Add backend infrastructure ownership notes to `backend/app/api/README.md`, `backend/app/core/README.md`, `backend/app/settings/README.md`, `backend/app/shared/README.md`, and `backend/app/workers/README.md`
-- [ ] T026 [P] [US2] Add frontend ownership notes to `frontend/app/README.md`, `frontend/components/README.md`, `frontend/features/README.md`, `frontend/hooks/README.md`, `frontend/lib/api/README.md`, `frontend/stores/README.md`, and `frontend/types/README.md`
-- [ ] T027 [P] [US2] Add frontend feature ownership notes to `frontend/features/auth/README.md`, `frontend/features/daily-logs/README.md`, `frontend/features/tasks/README.md`, `frontend/features/notes/README.md`, `frontend/features/imports/README.md`, `frontend/features/analytics/README.md`, `frontend/features/ai-insights/README.md`, and `frontend/features/reports/README.md`
-- [ ] T028 [US2] Add future phase compliance review checklist for scope, naming, module boundaries, and skeleton path ownership to `docs/FOUNDATION.md`
+- [X] T020 [US2] Add approved platform decisions table for backend, frontend, database, jobs, AI, and ingestion to `docs/FOUNDATION.md`
+- [X] T021 [US2] Add backend architecture rules for router, service, repository, database, settings, shared, and workers ownership to `docs/FOUNDATION.md`
+- [X] T022 [US2] Add frontend architecture rules for app routing, feature logic, components, API client, hooks, stores, and types ownership to `docs/FOUNDATION.md`
+- [X] T023 [US2] Add naming convention section for snake_case modules, kebab-case specs and branches, PascalCase domain entities, and descriptive job names to `docs/FOUNDATION.md`
+- [X] T024 [P] [US2] Add backend module ownership notes to `backend/app/modules/auth/README.md`, `backend/app/modules/daily_logs/README.md`, `backend/app/modules/tasks/README.md`, `backend/app/modules/notes/README.md`, `backend/app/modules/imports/README.md`, `backend/app/modules/analytics/README.md`, `backend/app/modules/ai_insights/README.md`, and `backend/app/modules/reports/README.md`
+- [X] T025 [P] [US2] Add backend infrastructure ownership notes to `backend/app/api/README.md`, `backend/app/core/README.md`, `backend/app/settings/README.md`, `backend/app/shared/README.md`, and `backend/app/workers/README.md`
+- [X] T026 [P] [US2] Add frontend ownership notes to `frontend/app/README.md`, `frontend/components/README.md`, `frontend/features/README.md`, `frontend/hooks/README.md`, `frontend/lib/api/README.md`, `frontend/stores/README.md`, and `frontend/types/README.md`
+- [X] T027 [P] [US2] Add frontend feature ownership notes to `frontend/features/auth/README.md`, `frontend/features/daily-logs/README.md`, `frontend/features/tasks/README.md`, `frontend/features/notes/README.md`, `frontend/features/imports/README.md`, `frontend/features/analytics/README.md`, `frontend/features/ai-insights/README.md`, and `frontend/features/reports/README.md`
+- [X] T028 [US2] Add future phase compliance review checklist for scope, naming, module boundaries, and skeleton path ownership to `docs/FOUNDATION.md`
 
 **Checkpoint**: User Story 2 is reviewable independently by checking that path ownership and naming decisions are documented in `docs/FOUNDATION.md` and skeleton README files.
 
@@ -102,12 +102,12 @@
 
 ### Implementation for User Story 3
 
-- [ ] T029 [US3] Add practical v1 non-functional baseline section for import traceability, clear failures, async status visibility, local recoverability, and data quality to `docs/FOUNDATION.md`
-- [ ] T030 [US3] Add excluded production hardening section for uptime SLAs, full monitoring, operational runbooks, and strict recovery objectives to `docs/FOUNDATION.md`
-- [ ] T031 [US3] Add AI boundary section stating AI may read validated productivity data and write separate insight outputs but must never mutate source logs, tasks, or imports to `docs/FOUNDATION.md`
-- [ ] T032 [US3] Add source-data authority and conflict-resolution rule for AI outputs to `docs/FOUNDATION.md`
-- [ ] T033 [US3] Add import, job, and AI traceability expectations to `backend/app/modules/imports/README.md`, `backend/app/modules/ai_insights/README.md`, and `backend/app/workers/README.md`
-- [ ] T034 [US3] Add quickstart validation reference for non-functional baselines and AI boundary to `docs/FOUNDATION.md`
+- [X] T029 [US3] Add practical v1 non-functional baseline section for import traceability, clear failures, async status visibility, local recoverability, and data quality to `docs/FOUNDATION.md`
+- [X] T030 [US3] Add excluded production hardening section for uptime SLAs, full monitoring, operational runbooks, and strict recovery objectives to `docs/FOUNDATION.md`
+- [X] T031 [US3] Add AI boundary section stating AI may read validated productivity data and write separate insight outputs but must never mutate source logs, tasks, or imports to `docs/FOUNDATION.md`
+- [X] T032 [US3] Add source-data authority and conflict-resolution rule for AI outputs to `docs/FOUNDATION.md`
+- [X] T033 [US3] Add import, job, and AI traceability expectations to `backend/app/modules/imports/README.md`, `backend/app/modules/ai_insights/README.md`, and `backend/app/workers/README.md`
+- [X] T034 [US3] Add quickstart validation reference for non-functional baselines and AI boundary to `docs/FOUNDATION.md`
 
 **Checkpoint**: User Story 3 is reviewable independently by checking non-functional and AI-boundary sections in `docs/FOUNDATION.md` and related skeleton README files.
 
@@ -117,14 +117,14 @@
 
 **Purpose**: Validate the Phase 0 foundation package and ensure no out-of-scope implementation slipped in.
 
-- [ ] T035 [P] Run the feature context validation commands from `specs/001-foundation-architecture/quickstart.md`
-- [ ] T036 [P] Run the planning artifact review from `specs/001-foundation-architecture/quickstart.md`
-- [ ] T037 [P] Run skeleton path inspection for `backend/app/`, `frontend/`, and `docker/` using `specs/001-foundation-architecture/quickstart.md`
-- [ ] T038 Run forbidden output search from `specs/001-foundation-architecture/quickstart.md` and document any acceptable documentation-only matches in `docs/FOUNDATION.md`
-- [ ] T039 [P] Verify every Phase 0 skeleton README and placeholder under `backend/app/`, `frontend/`, and `docker/` contains explanatory content only and no runnable app behavior
-- [ ] T040 [P] Verify `docs/FOUNDATION.md` satisfies `specs/001-foundation-architecture/contracts/foundation-package.md`
-- [ ] T041 [P] Verify all Phase 0 paths follow naming conventions in `docs/FOUNDATION.md`
-- [ ] T042 Update `specs/001-foundation-architecture/quickstart.md` only if implementation changed validation commands or expected skeleton paths
+- [X] T035 [P] Run the feature context validation commands from `specs/001-foundation-architecture/quickstart.md`
+- [X] T036 [P] Run the planning artifact review from `specs/001-foundation-architecture/quickstart.md`
+- [X] T037 [P] Run skeleton path inspection for `backend/app/`, `frontend/`, and `docker/` using `specs/001-foundation-architecture/quickstart.md`
+- [X] T038 Run forbidden output search from `specs/001-foundation-architecture/quickstart.md` and document any acceptable documentation-only matches in `docs/FOUNDATION.md`
+- [X] T039 [P] Verify every Phase 0 skeleton README and placeholder under `backend/app/`, `frontend/`, and `docker/` contains explanatory content only and no runnable app behavior
+- [X] T040 [P] Verify `docs/FOUNDATION.md` satisfies `specs/001-foundation-architecture/contracts/foundation-package.md`
+- [X] T041 [P] Verify all Phase 0 paths follow naming conventions in `docs/FOUNDATION.md`
+- [X] T042 Update `specs/001-foundation-architecture/quickstart.md` only if implementation changed validation commands or expected skeleton paths
 
 ---
 

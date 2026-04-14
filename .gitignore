@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+backend/.venv/
+backend/venv/
+backend/env/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+
+
+#ENV files
+.env
+.env.local
+.env.*.local

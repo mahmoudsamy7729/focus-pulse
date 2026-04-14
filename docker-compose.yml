@@ -1,0 +1,18 @@
+# FocusPulse Phase 0 compose placeholder.
+# This file intentionally defines no runnable services yet.
+#
+# Future service inventory:
+#
+# services:
+#   frontend:
+#     # Future Next.js dashboard service.
+#   backend:
+#     # Future FastAPI REST API service.
+#   postgres:
+#     # Future PostgreSQL persistence service.
+#   redis:
+#     # Future Redis broker/cache service.
+#   celery_worker:
+#     # Future Celery worker service using the backend image.
+#   celery_beat:
+#     # Later scheduled job service if scheduled imports or AI runs are added.

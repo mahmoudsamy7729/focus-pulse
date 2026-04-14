@@ -74,6 +74,10 @@
 
 - What happens when [boundary condition]?
 - How does system handle [error scenario]?
+- How does system handle duplicate submissions, retries, or repeated background jobs?
+- What should be soft-deleted, restored, or hard-deleted when deletion is requested?
+- Which list endpoints need `page` and `limit`, and which need `cursor` pagination?
+- What audit trail is required for imports, AI runs, or admin actions?
 
 ## Requirements *(mandatory)*
 
@@ -89,11 +93,20 @@
 - **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
 - **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
 - **FR-005**: System MUST [behavior, e.g., "log all security events"]
+- **FR-006**: APIs MUST be exposed under the current versioned prefix, e.g. `/api/v1/`
+- **FR-007**: API success responses MUST use the standard success envelope for handled JSON responses
+- **FR-008**: API errors MUST use the unified error response shape with stable error codes
+- **FR-009**: List endpoints MUST define pagination behavior using either `page` and `limit` or `cursor`
+- **FR-010**: Protected operations MUST define required auth scopes or permissions
+- **FR-011**: Expensive or abuse-sensitive operations MUST define rate-limit expectations
+- **FR-012**: Import, AI-run, report, and background-job operations MUST define idempotency behavior
+- **FR-013**: Imports, AI runs, and admin actions MUST define audit-trail fields for actor, timestamp, request/change details, resulting status, and failure details
+- **FR-014**: Data deletion behavior MUST state whether soft delete, restore, audit, or hard delete applies
 
 *Example of marking unclear requirements:*
 
-- **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
-- **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
+- **FR-015**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
+- **FR-016**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
 
 ### Key Entities *(include if feature involves data)*
 

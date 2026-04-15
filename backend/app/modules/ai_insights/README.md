@@ -9,4 +9,7 @@ must never mutate source logs, tasks, notes, or imports.
 Future AI work must keep run status, input period, model, output, and failure
 context traceable.
 
-Phase 0 contains explanatory placeholders only.
+Phase 1 owns `AIInsightRun` and `AIInsightRunSource` traceability records plus
+the service rules for daily/weekly target-period validation, source links,
+status transitions, and rerun history. Prompt execution and generated insight
+content remain outside this phase.

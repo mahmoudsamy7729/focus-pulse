@@ -17,10 +17,10 @@
 
 **Purpose**: Establish backend package, dependency, and test foundations needed before persistence work begins.
 
-- [ ] T001 Add SQLAlchemy Async, Alembic, async PostgreSQL driver, pydantic-settings, pytest, pytest-asyncio, and any test database helper dependencies to `backend/pyproject.toml`
-- [ ] T002 Create backend package markers for the target app layout in `backend/app/__init__.py`, `backend/app/core/__init__.py`, `backend/app/settings/__init__.py`, and `backend/app/shared/__init__.py`
-- [ ] T003 [P] Create backend test package markers in `backend/tests/__init__.py`, `backend/tests/domain/__init__.py`, `backend/tests/repositories/__init__.py`, and `backend/tests/migrations/__init__.py`
-- [ ] T004 [P] Add Phase 1 test command documentation to `backend/README.md`
+- [X] T001 Add SQLAlchemy Async, Alembic, async PostgreSQL driver, pydantic-settings, pytest, pytest-asyncio, and any test database helper dependencies to `backend/pyproject.toml`
+- [X] T002 Create backend package markers for the target app layout in `backend/app/__init__.py`, `backend/app/core/__init__.py`, `backend/app/settings/__init__.py`, and `backend/app/shared/__init__.py`
+- [X] T003 [P] Create backend test package markers in `backend/tests/__init__.py`, `backend/tests/domain/__init__.py`, `backend/tests/repositories/__init__.py`, and `backend/tests/migrations/__init__.py`
+- [X] T004 [P] Add Phase 1 test command documentation to `backend/README.md`
 
 ---
 
@@ -30,16 +30,16 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T005 Implement database settings in `backend/app/settings/database.py`
-- [ ] T006 Implement settings aggregation in `backend/app/core/config.py`
-- [ ] T007 Implement async engine, async session factory, declarative Base, and DB dependency in `backend/app/core/database.py`
-- [ ] T008 [P] Implement shared timestamp and soft-delete mixins in `backend/app/shared/models/base.py`
-- [ ] T009 [P] Implement shared `RunStatus` enum in `backend/app/shared/enums/run_status.py`
-- [ ] T010 [P] Implement shared source and normalization constants in `backend/app/shared/enums/source.py`
-- [ ] T011 Configure Alembic metadata imports for `backend/app/core/database.py` and planned module models in `backend/alembic/env.py`
-- [ ] T012 Create initial Phase 1 Alembic revision skeleton in `backend/alembic/versions/002_core_domain_data_model.py`
-- [ ] T013 [P] Add async database test fixtures in `backend/tests/conftest.py`
-- [ ] T014 [P] Add shared model import smoke test in `backend/tests/migrations/test_model_metadata.py`
+- [X] T005 Implement database settings in `backend/app/settings/database.py`
+- [X] T006 Implement settings aggregation in `backend/app/core/config.py`
+- [X] T007 Implement async engine, async session factory, declarative Base, and DB dependency in `backend/app/core/database.py`
+- [X] T008 [P] Implement shared timestamp and soft-delete mixins in `backend/app/shared/models/base.py`
+- [X] T009 [P] Implement shared `RunStatus` enum in `backend/app/shared/enums/run_status.py`
+- [X] T010 [P] Implement shared source and normalization constants in `backend/app/shared/enums/source.py`
+- [X] T011 Configure Alembic metadata imports for `backend/app/core/database.py` and planned module models in `backend/alembic/env.py`
+- [X] T012 Create initial Phase 1 Alembic revision skeleton in `backend/alembic/versions/002_core_domain_data_model.py`
+- [X] T013 [P] Add async database test fixtures in `backend/tests/conftest.py`
+- [X] T014 [P] Add shared model import smoke test in `backend/tests/migrations/test_model_metadata.py`
 
 **Checkpoint**: Database and test foundations are ready. User story implementation can begin.
 
@@ -53,33 +53,33 @@
 
 ### Tests for User Story 1
 
-- [ ] T015 [P] [US1] Add DailyLog uniqueness and date reuse service tests in `backend/tests/domain/test_daily_logs.py`
-- [ ] T016 [P] [US1] Add task duration, tag normalization, and category normalization service tests in `backend/tests/domain/test_tasks.py`
-- [ ] T017 [P] [US1] Add empty note and one-active-note service tests in `backend/tests/domain/test_notes.py`
-- [ ] T018 [P] [US1] Add daily log, task, category, and note repository tests in `backend/tests/repositories/test_daily_tracking_repositories.py`
-- [ ] T019 [P] [US1] Add migration assertions for daily log, task, category, and note tables in `backend/tests/migrations/test_core_domain_migration.py`
+- [X] T015 [P] [US1] Add DailyLog uniqueness and date reuse service tests in `backend/tests/domain/test_daily_logs.py`
+- [X] T016 [P] [US1] Add task duration, tag normalization, and category normalization service tests in `backend/tests/domain/test_tasks.py`
+- [X] T017 [P] [US1] Add empty note and one-active-note service tests in `backend/tests/domain/test_notes.py`
+- [X] T018 [P] [US1] Add daily log, task, category, and note repository tests in `backend/tests/repositories/test_daily_tracking_repositories.py`
+- [X] T019 [P] [US1] Add migration assertions for daily log, task, category, and note tables in `backend/tests/migrations/test_core_domain_migration.py`
 
 ### Implementation for User Story 1
 
-- [ ] T020 [P] [US1] Implement `DailyLog` ORM model in `backend/app/modules/daily_logs/models.py`
-- [ ] T021 [P] [US1] Implement `Category` and `Task` ORM models in `backend/app/modules/tasks/models.py`
-- [ ] T022 [P] [US1] Implement `Note` ORM model in `backend/app/modules/notes/models.py`
-- [ ] T023 [P] [US1] Implement daily log schemas in `backend/app/modules/daily_logs/schemas.py`
-- [ ] T024 [P] [US1] Implement task and category schemas in `backend/app/modules/tasks/schemas.py`
-- [ ] T025 [P] [US1] Implement note schemas in `backend/app/modules/notes/schemas.py`
-- [ ] T026 [P] [US1] Implement daily log domain exceptions in `backend/app/modules/daily_logs/exceptions.py`
-- [ ] T027 [P] [US1] Implement task domain exceptions in `backend/app/modules/tasks/exceptions.py`
-- [ ] T028 [P] [US1] Implement note domain exceptions in `backend/app/modules/notes/exceptions.py`
-- [ ] T029 [US1] Implement `DailyLogRepository` in `backend/app/modules/daily_logs/repositories/daily_log_repository.py`
-- [ ] T030 [US1] Implement `TaskRepository` and `CategoryRepository` in `backend/app/modules/tasks/repositories/task_repository.py`
-- [ ] T031 [US1] Implement `NoteRepository` in `backend/app/modules/notes/repositories/note_repository.py`
-- [ ] T032 [US1] Implement `DailyLogService.get_or_create_daily_log` and date-range reads in `backend/app/modules/daily_logs/services/daily_log_service.py`
-- [ ] T033 [US1] Implement `TaskService.create_task`, category reuse, tag normalization, and total calculations in `backend/app/modules/tasks/services/task_service.py`
-- [ ] T034 [US1] Implement `NoteService` empty-note handling and one-active-note rule in `backend/app/modules/notes/services/note_service.py`
-- [ ] T035 [US1] Wire daily log service and repository providers in `backend/app/modules/daily_logs/dependencies.py`
-- [ ] T036 [US1] Wire task service and repository providers in `backend/app/modules/tasks/dependencies.py`
-- [ ] T037 [US1] Wire note service and repository providers in `backend/app/modules/notes/dependencies.py`
-- [ ] T038 [US1] Add DailyLog, Category, Task, and Note table definitions, relationships, indexes, and constraints to `backend/alembic/versions/002_core_domain_data_model.py`
+- [X] T020 [P] [US1] Implement `DailyLog` ORM model in `backend/app/modules/daily_logs/models.py`
+- [X] T021 [P] [US1] Implement `Category` and `Task` ORM models in `backend/app/modules/tasks/models.py`
+- [X] T022 [P] [US1] Implement `Note` ORM model in `backend/app/modules/notes/models.py`
+- [X] T023 [P] [US1] Implement daily log schemas in `backend/app/modules/daily_logs/schemas.py`
+- [X] T024 [P] [US1] Implement task and category schemas in `backend/app/modules/tasks/schemas.py`
+- [X] T025 [P] [US1] Implement note schemas in `backend/app/modules/notes/schemas.py`
+- [X] T026 [P] [US1] Implement daily log domain exceptions in `backend/app/modules/daily_logs/exceptions.py`
+- [X] T027 [P] [US1] Implement task domain exceptions in `backend/app/modules/tasks/exceptions.py`
+- [X] T028 [P] [US1] Implement note domain exceptions in `backend/app/modules/notes/exceptions.py`
+- [X] T029 [US1] Implement `DailyLogRepository` in `backend/app/modules/daily_logs/repositories/daily_log_repository.py`
+- [X] T030 [US1] Implement `TaskRepository` and `CategoryRepository` in `backend/app/modules/tasks/repositories/task_repository.py`
+- [X] T031 [US1] Implement `NoteRepository` in `backend/app/modules/notes/repositories/note_repository.py`
+- [X] T032 [US1] Implement `DailyLogService.get_or_create_daily_log` and date-range reads in `backend/app/modules/daily_logs/services/daily_log_service.py`
+- [X] T033 [US1] Implement `TaskService.create_task`, category reuse, tag normalization, and total calculations in `backend/app/modules/tasks/services/task_service.py`
+- [X] T034 [US1] Implement `NoteService` empty-note handling and one-active-note rule in `backend/app/modules/notes/services/note_service.py`
+- [X] T035 [US1] Wire daily log service and repository providers in `backend/app/modules/daily_logs/dependencies.py`
+- [X] T036 [US1] Wire task service and repository providers in `backend/app/modules/tasks/dependencies.py`
+- [X] T037 [US1] Wire note service and repository providers in `backend/app/modules/notes/dependencies.py`
+- [X] T038 [US1] Add DailyLog, Category, Task, and Note table definitions, relationships, indexes, and constraints to `backend/alembic/versions/002_core_domain_data_model.py`
 
 **Checkpoint**: User Story 1 is independently testable as the MVP domain model for daily tracking data.
 
@@ -93,23 +93,23 @@
 
 ### Tests for User Story 2
 
-- [ ] T039 [P] [US2] Add import run status transition and count tests in `backend/tests/domain/test_import_runs.py`
-- [ ] T040 [P] [US2] Add import row outcome validation tests in `backend/tests/domain/test_import_row_outcomes.py`
-- [ ] T041 [P] [US2] Add duplicate imported task skip tests in `backend/tests/domain/test_import_deduplication.py`
-- [ ] T042 [P] [US2] Add import repository traceability tests in `backend/tests/repositories/test_import_run_repository.py`
-- [ ] T043 [P] [US2] Extend migration assertions for import run and row outcome tables in `backend/tests/migrations/test_core_domain_migration.py`
+- [X] T039 [P] [US2] Add import run status transition and count tests in `backend/tests/domain/test_import_runs.py`
+- [X] T040 [P] [US2] Add import row outcome validation tests in `backend/tests/domain/test_import_row_outcomes.py`
+- [X] T041 [P] [US2] Add duplicate imported task skip tests in `backend/tests/domain/test_import_deduplication.py`
+- [X] T042 [P] [US2] Add import repository traceability tests in `backend/tests/repositories/test_import_run_repository.py`
+- [X] T043 [P] [US2] Extend migration assertions for import run and row outcome tables in `backend/tests/migrations/test_core_domain_migration.py`
 
 ### Implementation for User Story 2
 
-- [ ] T044 [P] [US2] Implement `ImportRun` and `ImportRowOutcome` ORM models in `backend/app/modules/imports/models.py`
-- [ ] T045 [P] [US2] Implement import run and row outcome schemas in `backend/app/modules/imports/schemas.py`
-- [ ] T046 [P] [US2] Implement import constants for row outcome types in `backend/app/modules/imports/constants.py`
-- [ ] T047 [P] [US2] Implement import domain exceptions in `backend/app/modules/imports/exceptions.py`
-- [ ] T048 [US2] Implement `ImportRunRepository` and row outcome persistence in `backend/app/modules/imports/repositories/import_run_repository.py`
-- [ ] T049 [US2] Implement `ImportTraceService` run creation, processing transition, row outcome recording, and terminal status rules in `backend/app/modules/imports/services/import_trace_service.py`
-- [ ] T050 [US2] Integrate imported duplicate detection with `TaskService.create_task` in `backend/app/modules/tasks/services/task_service.py`
-- [ ] T051 [US2] Wire import trace service and repository providers in `backend/app/modules/imports/dependencies.py`
-- [ ] T052 [US2] Add ImportRun and ImportRowOutcome table definitions, relationships, indexes, and constraints to `backend/alembic/versions/002_core_domain_data_model.py`
+- [X] T044 [P] [US2] Implement `ImportRun` and `ImportRowOutcome` ORM models in `backend/app/modules/imports/models.py`
+- [X] T045 [P] [US2] Implement import run and row outcome schemas in `backend/app/modules/imports/schemas.py`
+- [X] T046 [P] [US2] Implement import constants for row outcome types in `backend/app/modules/imports/constants.py`
+- [X] T047 [P] [US2] Implement import domain exceptions in `backend/app/modules/imports/exceptions.py`
+- [X] T048 [US2] Implement `ImportRunRepository` and row outcome persistence in `backend/app/modules/imports/repositories/import_run_repository.py`
+- [X] T049 [US2] Implement `ImportTraceService` run creation, processing transition, row outcome recording, and terminal status rules in `backend/app/modules/imports/services/import_trace_service.py`
+- [X] T050 [US2] Integrate imported duplicate detection with `TaskService.create_task` in `backend/app/modules/tasks/services/task_service.py`
+- [X] T051 [US2] Wire import trace service and repository providers in `backend/app/modules/imports/dependencies.py`
+- [X] T052 [US2] Add ImportRun and ImportRowOutcome table definitions, relationships, indexes, and constraints to `backend/alembic/versions/002_core_domain_data_model.py`
 
 **Checkpoint**: User Story 2 is independently testable for import traceability without implementing CSV upload or parsing.
 
@@ -123,22 +123,22 @@
 
 ### Tests for User Story 3
 
-- [ ] T053 [P] [US3] Add AI insight target-period validation tests in `backend/tests/domain/test_ai_insight_runs.py`
-- [ ] T054 [P] [US3] Add AI insight status transition and rerun history tests in `backend/tests/domain/test_ai_insight_run_lifecycle.py`
-- [ ] T055 [P] [US3] Add AI insight source immutability tests in `backend/tests/domain/test_ai_insight_sources.py`
-- [ ] T056 [P] [US3] Add AI insight repository traceability tests in `backend/tests/repositories/test_ai_insight_run_repository.py`
-- [ ] T057 [P] [US3] Extend migration assertions for AI insight run and source tables in `backend/tests/migrations/test_core_domain_migration.py`
+- [X] T053 [P] [US3] Add AI insight target-period validation tests in `backend/tests/domain/test_ai_insight_runs.py`
+- [X] T054 [P] [US3] Add AI insight status transition and rerun history tests in `backend/tests/domain/test_ai_insight_run_lifecycle.py`
+- [X] T055 [P] [US3] Add AI insight source immutability tests in `backend/tests/domain/test_ai_insight_sources.py`
+- [X] T056 [P] [US3] Add AI insight repository traceability tests in `backend/tests/repositories/test_ai_insight_run_repository.py`
+- [X] T057 [P] [US3] Extend migration assertions for AI insight run and source tables in `backend/tests/migrations/test_core_domain_migration.py`
 
 ### Implementation for User Story 3
 
-- [ ] T058 [P] [US3] Implement `AIInsightRun` and `AIInsightRunSource` ORM models in `backend/app/modules/ai_insights/models.py`
-- [ ] T059 [P] [US3] Implement AI insight run schemas in `backend/app/modules/ai_insights/schemas.py`
-- [ ] T060 [P] [US3] Implement AI insight constants for daily and weekly target periods in `backend/app/modules/ai_insights/constants.py`
-- [ ] T061 [P] [US3] Implement AI insight domain exceptions in `backend/app/modules/ai_insights/exceptions.py`
-- [ ] T062 [US3] Implement `AIInsightRunRepository` and source-link persistence in `backend/app/modules/ai_insights/repositories/ai_insight_run_repository.py`
-- [ ] T063 [US3] Implement `AIInsightRunService` target-period validation, source linking, status transitions, and rerun creation in `backend/app/modules/ai_insights/services/ai_insight_run_service.py`
-- [ ] T064 [US3] Wire AI insight run service and repository providers in `backend/app/modules/ai_insights/dependencies.py`
-- [ ] T065 [US3] Add AIInsightRun and AIInsightRunSource table definitions, relationships, indexes, and constraints to `backend/alembic/versions/002_core_domain_data_model.py`
+- [X] T058 [P] [US3] Implement `AIInsightRun` and `AIInsightRunSource` ORM models in `backend/app/modules/ai_insights/models.py`
+- [X] T059 [P] [US3] Implement AI insight run schemas in `backend/app/modules/ai_insights/schemas.py`
+- [X] T060 [P] [US3] Implement AI insight constants for daily and weekly target periods in `backend/app/modules/ai_insights/constants.py`
+- [X] T061 [P] [US3] Implement AI insight domain exceptions in `backend/app/modules/ai_insights/exceptions.py`
+- [X] T062 [US3] Implement `AIInsightRunRepository` and source-link persistence in `backend/app/modules/ai_insights/repositories/ai_insight_run_repository.py`
+- [X] T063 [US3] Implement `AIInsightRunService` target-period validation, source linking, status transitions, and rerun creation in `backend/app/modules/ai_insights/services/ai_insight_run_service.py`
+- [X] T064 [US3] Wire AI insight run service and repository providers in `backend/app/modules/ai_insights/dependencies.py`
+- [X] T065 [US3] Add AIInsightRun and AIInsightRunSource table definitions, relationships, indexes, and constraints to `backend/alembic/versions/002_core_domain_data_model.py`
 
 **Checkpoint**: All Phase 1 user stories are independently testable without executing AI analysis.
 
@@ -148,12 +148,12 @@
 
 **Purpose**: Verify consistency, documentation, and out-of-scope boundaries across the completed Phase 1 model.
 
-- [ ] T066 [P] Update module README ownership notes in `backend/app/modules/daily_logs/README.md`, `backend/app/modules/tasks/README.md`, `backend/app/modules/notes/README.md`, `backend/app/modules/imports/README.md`, and `backend/app/modules/ai_insights/README.md`
-- [ ] T067 [P] Update Phase 1 implementation notes in `docs/FOUNDATION.md`
-- [ ] T068 Run backend service, repository, and migration tests documented in `specs/002-core-domain-data-model/quickstart.md`
-- [ ] T069 Run the out-of-scope surface scan from `specs/002-core-domain-data-model/quickstart.md`
-- [ ] T070 Review `backend/alembic/versions/002_core_domain_data_model.py` against `specs/002-core-domain-data-model/data-model.md` for all fields, constraints, indexes, and relationships
-- [ ] T071 Review `backend/app/modules/daily_logs/services/daily_log_service.py`, `backend/app/modules/tasks/services/task_service.py`, `backend/app/modules/notes/services/note_service.py`, `backend/app/modules/imports/services/import_trace_service.py`, `backend/app/modules/ai_insights/services/ai_insight_run_service.py`, `backend/app/modules/daily_logs/repositories/daily_log_repository.py`, `backend/app/modules/tasks/repositories/task_repository.py`, `backend/app/modules/notes/repositories/note_repository.py`, `backend/app/modules/imports/repositories/import_run_repository.py`, and `backend/app/modules/ai_insights/repositories/ai_insight_run_repository.py` for Router -> Service -> Repository -> Database boundary compliance
+- [X] T066 [P] Update module README ownership notes in `backend/app/modules/daily_logs/README.md`, `backend/app/modules/tasks/README.md`, `backend/app/modules/notes/README.md`, `backend/app/modules/imports/README.md`, and `backend/app/modules/ai_insights/README.md`
+- [X] T067 [P] Update Phase 1 implementation notes in `docs/FOUNDATION.md`
+- [X] T068 Run backend service, repository, and migration tests documented in `specs/002-core-domain-data-model/quickstart.md`
+- [X] T069 Run the out-of-scope surface scan from `specs/002-core-domain-data-model/quickstart.md`
+- [X] T070 Review `backend/alembic/versions/002_core_domain_data_model.py` against `specs/002-core-domain-data-model/data-model.md` for all fields, constraints, indexes, and relationships
+- [X] T071 Review `backend/app/modules/daily_logs/services/daily_log_service.py`, `backend/app/modules/tasks/services/task_service.py`, `backend/app/modules/notes/services/note_service.py`, `backend/app/modules/imports/services/import_trace_service.py`, `backend/app/modules/ai_insights/services/ai_insight_run_service.py`, `backend/app/modules/daily_logs/repositories/daily_log_repository.py`, `backend/app/modules/tasks/repositories/task_repository.py`, `backend/app/modules/notes/repositories/note_repository.py`, `backend/app/modules/imports/repositories/import_run_repository.py`, and `backend/app/modules/ai_insights/repositories/ai_insight_run_repository.py` for Router -> Service -> Repository -> Database boundary compliance
 
 ---
 

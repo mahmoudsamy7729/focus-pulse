@@ -1,6 +1,6 @@
 # FocusPulse Foundation
 
-Last updated: 2026-04-14
+Last updated: 2026-04-15
 
 ## Phase 0 Boundary
 
@@ -114,6 +114,22 @@ The intended flow for later implementation is:
 ```text
 Router -> Service -> Repository -> Database
 ```
+
+## Phase 1 Implementation Notes
+
+Phase 1 now implements the core backend data model under `backend/app/`:
+
+- SQLAlchemy Async database wiring lives in `backend/app/core/database.py`.
+- Database settings live in `backend/app/settings/database.py` and are composed
+  through `backend/app/core/config.py`.
+- Daily logs, tasks, categories, notes, imports, and AI insight run traceability
+  are implemented in their owning modules under `backend/app/modules/`.
+- Alembic migration surface lives under `backend/alembic/`.
+- Service, repository, and migration tests live under `backend/tests/`.
+
+Phase 1 still does not add public API endpoints, CSV upload/parsing, Celery
+jobs, AI prompt execution, frontend runtime work, scheduled automation, or
+production hardening.
 
 ## Frontend Architecture Rules
 

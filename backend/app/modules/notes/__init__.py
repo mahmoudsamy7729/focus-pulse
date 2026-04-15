@@ -1,0 +1,1 @@
+"""Task note domain module."""

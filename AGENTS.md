@@ -1,8 +1,10 @@
-# FocusPulse Development Guidelines
+﻿# FocusPulse Development Guidelines
 
 Auto-generated from feature plans and adjusted for the current skeleton-only Phase 0 state. Last updated: 2026-04-14.
 
 ## Active Technologies
+- Phase 1 backend planning target: Python >=3.12, FastAPI, SQLAlchemy Async, Alembic, PostgreSQL, UUID primary keys, JSON task tags, normalized categories, soft-delete-capable traceability records, and pytest-compatible backend tests.
+- Phase 1 excludes frontend runtime work; Next.js/Tailwind/shadcn/TanStack Query/React Hook Form/Zod/Axios/Recharts remain approved future stack items.
 
 - Backend target: Python >=3.12, FastAPI, SQLAlchemy Async, Alembic, PostgreSQL, Celery, Redis.
 - Frontend target: Next.js App Router, TypeScript, Tailwind CSS, shadcn/ui, TanStack Query, React Hook Form, Zod, Axios, Recharts.
@@ -31,6 +33,7 @@ specs/
 - Background job names are descriptive.
 
 ## Recent Changes
+- `002-core-domain-data-model`: Added Phase 1 plan artifacts for backend domain models, persistence rules, traceability contracts, and validation expectations.
 
 - `001-foundation-architecture`: Added Phase 0 plan artifacts for the foundation package and skeleton-only repository setup.
 

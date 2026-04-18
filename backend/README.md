@@ -19,3 +19,17 @@ pytest tests/domain tests/repositories tests/migrations -q
 The tests cover service rules, repository persistence behavior, model metadata,
 and the Phase 1 Alembic revision surface. Phase 1 does not add public API
 endpoints, CSV parsing, frontend runtime code, background jobs, or AI execution.
+
+## Phase 2 test commands
+
+After syncing Phase 2 backend dependencies, validate the CSV import pipeline
+with:
+
+```powershell
+Set-Location backend
+pytest tests/domain tests/repositories tests/api tests/workers -q
+```
+
+The Phase 2 suite covers CSV parsing and preview behavior, confirmed import
+execution, status/history APIs, worker delegation, standard response envelopes,
+pagination, and raw CSV non-retention.

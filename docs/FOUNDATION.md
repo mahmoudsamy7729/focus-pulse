@@ -131,6 +131,26 @@ Phase 1 still does not add public API endpoints, CSV upload/parsing, Celery
 jobs, AI prompt execution, frontend runtime work, scheduled automation, or
 production hardening.
 
+## Phase 2 Implementation Notes
+
+Phase 2 now implements the backend CSV import pipeline under
+`backend/app/modules/imports/`:
+
+- FastAPI runtime composition lives in `backend/app/main.py` and
+  `backend/app/api/router.py`, with import routes mounted at `/api/v1/imports`.
+- CSV preview parses and validates uploaded files without creating import runs
+  or daily tracking records.
+- Confirmed imports create pending `ImportRun` records, enqueue normalized row
+  payloads, and process rows through existing daily log, task, note, and import
+  trace services.
+- Celery and Redis settings live under `backend/app/settings/`; the worker task
+  in `backend/app/workers/tasks/import_tasks.py` remains a thin delegate.
+- Import history, status, and row outcome APIs are owner-scoped and paginated.
+- Full raw CSV contents are not retained in persistence.
+
+Phase 2 still does not add dashboard visualization, AI execution, scheduled
+imports, Notion API synchronization, report export, or production hardening.
+
 ## Frontend Architecture Rules
 
 - `frontend/app/` owns routing, layouts, page composition, and server/client

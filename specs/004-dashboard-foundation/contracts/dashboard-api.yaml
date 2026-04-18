@@ -111,12 +111,72 @@ components:
       properties:
         success: { type: boolean, const: true }
         data: { $ref: "#/components/schemas/DashboardOverview" }
+      examples:
+        - success: true
+          data:
+            period:
+              period_type: day
+              anchor_date: "2026-04-15"
+              start_date: "2026-04-15"
+              end_date: "2026-04-15"
+              label: "Apr 15, 2026"
+            summary:
+              total_minutes: 135
+              display_total: "2h 15m"
+              task_count: 3
+              daily_log_count: 1
+              highest_time_category: { label: "Work", total_minutes: 105, display_total: "1h 45m" }
+              average_minutes_per_logged_day: null
+            daily_logs:
+              - date: "2026-04-15"
+                total_minutes: 135
+                display_total: "2h 15m"
+                task_count: 3
+                top_category: { label: "Work", total_minutes: 105, display_total: "1h 45m" }
+            period_timeline:
+              - date: "2026-04-15"
+                total_minutes: 135
+                display_total: "2h 15m"
+                has_tasks: true
+            category_breakdown:
+              - label: "Work"
+                total_minutes: 105
+                display_total: "1h 45m"
+                share_of_total: 0.7778
+                is_other: false
+            tag_breakdown:
+              - label: "deep"
+                total_minutes: 90
+                display_total: "1h 30m"
+                share_label: "67% of tracked time"
+                is_untagged: false
+                is_other: false
+            tag_total_notice: null
+            empty_state: null
     DayDetailSuccess:
       type: object
       required: [success, data]
       properties:
         success: { type: boolean, const: true }
         data: { $ref: "#/components/schemas/DayDetail" }
+      examples:
+        - success: true
+          data:
+            date: "2026-04-15"
+            total_minutes: 135
+            display_total: "2h 15m"
+            task_count: 3
+            tasks:
+              - id: "00000000-0000-4000-8000-000000000001"
+                title: "Plan dashboard"
+                time_spent_minutes: 45
+                display_time: "45m"
+                category: "Work"
+                tags: ["deep"]
+                note: "Reviewed period filters."
+                source: "csv_import"
+                timeline_position: 0
+            empty_state: null
     DashboardOverview:
       type: object
       required: [period, summary, daily_logs, period_timeline, category_breakdown, tag_breakdown]

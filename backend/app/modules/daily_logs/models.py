@@ -39,3 +39,6 @@ Index(
     sqlite_where=DailyLog.deleted_at.is_(None),
     postgresql_where=DailyLog.deleted_at.is_(None),
 )
+
+# Register the reverse relationship target when DailyLog is imported at runtime.
+from app.modules.ai_insights.models import AIInsightRunSource  # noqa: E402,F401

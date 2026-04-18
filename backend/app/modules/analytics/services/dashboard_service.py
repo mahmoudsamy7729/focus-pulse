@@ -103,7 +103,8 @@ class DashboardService:
         task_count = len(rows)
         logged_days = {row.log_date for row in rows}
         category_totals = self._category_totals(rows)
-        highest = self._named_total(max(category_totals.items(), key=lambda item: (item[1], item[0])), allow_none=True)
+        highest_item = max(category_totals.items(), key=lambda item: (item[1], item[0])) if category_totals else None
+        highest = self._named_total(highest_item, allow_none=True)
         average = None
         if period_type in {PERIOD_WEEK, PERIOD_MONTH} and logged_days:
             average = round(total_minutes / len(logged_days))
@@ -125,8 +126,11 @@ class DashboardService:
         for log_date in sorted(by_day):
             day_rows = by_day[log_date]
             category_totals = self._category_totals(day_rows)
+            top_category_item = (
+                max(category_totals.items(), key=lambda item: (item[1], item[0])) if category_totals else None
+            )
             top_category = self._named_total(
-                max(category_totals.items(), key=lambda item: (item[1], item[0])),
+                top_category_item,
                 allow_none=True,
             )
             total_minutes = sum(row.time_spent_minutes for row in day_rows)

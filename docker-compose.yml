@@ -1,18 +1,109 @@
-# FocusPulse Phase 0 compose placeholder.
-# This file intentionally defines no runnable services yet.
-#
-# Future service inventory:
-#
-# services:
-#   frontend:
-#     # Future Next.js dashboard service.
-#   backend:
-#     # Future FastAPI REST API service.
-#   postgres:
-#     # Future PostgreSQL persistence service.
-#   redis:
-#     # Future Redis broker/cache service.
-#   celery_worker:
-#     # Future Celery worker service using the backend image.
-#   celery_beat:
-#     # Later scheduled job service if scheduled imports or AI runs are added.
+name: focuspulse
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-focuspulse}
+      POSTGRES_USER: ${POSTGRES_USER:-focuspulse}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-focuspulse}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    command: >
+      sh -c "alembic upgrade head &&
+      uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    environment:
+      APP_NAME: ${APP_NAME:-FocusPulse}
+      APP_ENV: ${APP_ENV:-local}
+      ENVIRONMENT: ${APP_ENV:-local}
+      DATABASE_URL: ${DATABASE_URL:-postgresql+asyncpg://focuspulse:focuspulse@postgres:5432/focuspulse}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL:-redis://redis:6379/1}
+      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND:-redis://redis:6379/2}
+      CELERY_DEFAULT_QUEUE: ${CELERY_DEFAULT_QUEUE:-focuspulse}
+      CELERY_TASK_ALWAYS_EAGER: ${CELERY_TASK_ALWAYS_EAGER:-false}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  celery_worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    command: celery -A app.workers.tasks.import_tasks:celery_app worker --loglevel=info
+    environment:
+      APP_NAME: ${APP_NAME:-FocusPulse}
+      APP_ENV: ${APP_ENV:-local}
+      ENVIRONMENT: ${APP_ENV:-local}
+      DATABASE_URL: ${DATABASE_URL:-postgresql+asyncpg://focuspulse:focuspulse@postgres:5432/focuspulse}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      CELERY_BROKER_URL: ${CELERY_BROKER_URL:-redis://redis:6379/1}
+      CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND:-redis://redis:6379/2}
+      CELERY_DEFAULT_QUEUE: ${CELERY_DEFAULT_QUEUE:-focuspulse}
+      CELERY_TASK_ALWAYS_EAGER: ${CELERY_TASK_ALWAYS_EAGER:-false}
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    command: npm run dev -- --hostname 0.0.0.0
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8000/api/v1}
+      NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME:-FocusPulse}
+      WATCHPACK_POLLING: ${WATCHPACK_POLLING:-true}
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+      - frontend_next:/app/.next
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  redis_data:
+  frontend_node_modules:
+  frontend_next:

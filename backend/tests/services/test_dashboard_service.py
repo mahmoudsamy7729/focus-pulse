@@ -52,3 +52,18 @@ async def test_dashboard_resolves_monday_to_sunday_week(async_session) -> None:
     assert result.period.end_date == date(2026, 4, 19)
     assert result.summary.total_minutes == 60
     assert len(result.period_timeline) == 7
+
+
+@pytest.mark.asyncio
+async def test_dashboard_empty_period_returns_empty_summary(async_session) -> None:
+    result = await DashboardService(DashboardRepository(async_session)).get_dashboard_overview(
+        DEFAULT_OWNER_ID, "day", date(2026, 4, 15)
+    )
+
+    assert result.summary.total_minutes == 0
+    assert result.summary.task_count == 0
+    assert result.summary.highest_time_category is None
+    assert result.daily_logs == []
+    assert result.category_breakdown == []
+    assert result.tag_breakdown == []
+    assert result.empty_state is not None

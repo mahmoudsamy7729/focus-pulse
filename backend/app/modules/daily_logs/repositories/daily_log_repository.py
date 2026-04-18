@@ -3,7 +3,7 @@ from uuid import UUID
 
 from sqlalchemy import Select, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import selectinload, with_loader_criteria
 
 from app.modules.daily_logs.models import DailyLog
 from app.modules.notes.models import Note
@@ -34,6 +34,8 @@ class DailyLogRepository:
             self._active_query()
             .where(DailyLog.owner_id == owner_id, DailyLog.log_date == log_date)
             .options(
+                with_loader_criteria(Task, Task.deleted_at.is_(None)),
+                with_loader_criteria(Note, Note.deleted_at.is_(None)),
                 selectinload(DailyLog.tasks.and_(Task.deleted_at.is_(None))).selectinload(Task.category),
                 selectinload(DailyLog.tasks.and_(Task.deleted_at.is_(None))).selectinload(
                     Task.note.and_(Note.deleted_at.is_(None))

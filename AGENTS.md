@@ -1,12 +1,14 @@
 ﻿# FocusPulse Development Guidelines
 
-Auto-generated from feature plans and adjusted for the current skeleton-only Phase 0 state. Last updated: 2026-04-15.
+Auto-generated from feature plans and adjusted for the current skeleton-only Phase 0 state. Last updated: 2026-04-18.
 
 ## Active Technologies
 - Phase 1 backend planning target: Python >=3.12, FastAPI, SQLAlchemy Async, Alembic, PostgreSQL, UUID primary keys, JSON task tags, normalized categories, soft-delete-capable traceability records, and pytest-compatible backend tests.
 - Phase 1 excludes frontend runtime work; Next.js/Tailwind/shadcn/TanStack Query/React Hook Form/Zod/Axios/Recharts remain approved future stack items.
 - Phase 2 backend planning target: Python >=3.12, FastAPI, SQLAlchemy Async, Alembic, PostgreSQL, existing Phase 1 daily tracking/import traceability tables, Celery, Redis, multipart CSV upload support, standard-library CSV parsing, explicit ISO/Notion-style date parsing, and pytest-compatible backend/API/worker tests.
 - Phase 2 excludes frontend runtime work unless a later task adds a minimal import route shell; full dashboard visualization remains Phase 3+.
+- Phase 3 dashboard planning target: Python >=3.12 backend read APIs plus the approved Next.js App Router/TypeScript frontend stack, with Tailwind CSS, shadcn/ui, TanStack Query, Zod, Axios, and Recharts.
+- Phase 3 storage target: existing PostgreSQL `DailyLog`, `Task`, `Category`, and `Note` tables; no new persistent dashboard tables by default, and Redis/Celery remain available but unused for dashboard reads.
 
 - Backend target: Python >=3.12, FastAPI, SQLAlchemy Async, Alembic, PostgreSQL, Celery, Redis.
 - Frontend target: Next.js App Router, TypeScript, Tailwind CSS, shadcn/ui, TanStack Query, React Hook Form, Zod, Axios, Recharts.
@@ -35,10 +37,12 @@ specs/
 - Background job names are descriptive.
 
 ## Recent Changes
+- `004-dashboard-foundation`: Added Phase 3 plan artifacts for read-only dashboard analytics APIs, day detail retrieval, period filters, chart-ready payloads, and frontend dashboard bootstrap.
 - `003-csv-import-pipeline`: Added Phase 2 plan artifacts for CSV preview, validation, normalization, confirmed async import execution, status/history APIs, row outcomes, and raw CSV non-retention.
 - `002-core-domain-data-model`: Added Phase 1 plan artifacts for backend domain models, persistence rules, traceability contracts, and validation expectations.
 
 - `001-foundation-architecture`: Added Phase 0 plan artifacts for the foundation package and skeleton-only repository setup.
+
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->

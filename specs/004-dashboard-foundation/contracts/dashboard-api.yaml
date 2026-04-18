@@ -1,0 +1,297 @@
+openapi: 3.1.0
+info:
+  title: FocusPulse Dashboard API
+  version: 0.1.0
+  description: Phase 3 contract for read-only dashboard overview and day detail data.
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+paths:
+  /analytics/dashboard:
+    get:
+      summary: Get dashboard overview for a day, week, or month
+      operationId: getDashboardOverview
+      security:
+        - bearerAuth: [analytics:read]
+      x-rate-limit: { limit: 60, window: 1 minute }
+      parameters:
+        - name: period_type
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [day, week, month]
+            default: day
+          description: Selected dashboard period type.
+        - name: anchor_date
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Date used to resolve the day, Monday-to-Sunday week, or calendar month. If omitted, the latest tracked day is used when available.
+      responses:
+        "200":
+          description: Dashboard overview payload.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DashboardOverviewSuccess" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/AuthError" }
+        "403": { $ref: "#/components/responses/PermissionError" }
+        "429": { $ref: "#/components/responses/RateLimitError" }
+  /daily-logs/{log_date}:
+    get:
+      summary: Get read-only detail for one tracked day
+      operationId: getDailyLogDetail
+      security:
+        - bearerAuth: [daily_logs:read]
+      x-rate-limit: { limit: 60, window: 1 minute }
+      parameters:
+        - name: log_date
+          in: path
+          required: true
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: Day detail payload. Empty days return an empty-state payload instead of 404.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DayDetailSuccess" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/AuthError" }
+        "403": { $ref: "#/components/responses/PermissionError" }
+        "429": { $ref: "#/components/responses/RateLimitError" }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    ValidationError:
+      description: Invalid filter or date input.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    AuthError:
+      description: Authentication required or invalid.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    PermissionError:
+      description: Authenticated user lacks the required read scope.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    RateLimitError:
+      description: Rate limit exceeded.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [success, error]
+      properties:
+        success: { type: boolean, const: false }
+        error:
+          type: object
+          required: [code, message, details]
+          properties:
+            code: { type: string, examples: [DASHBOARD_VALIDATION_ERROR] }
+            message: { type: string }
+            details: { type: object }
+    DashboardOverviewSuccess:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data: { $ref: "#/components/schemas/DashboardOverview" }
+      examples:
+        - success: true
+          data:
+            period:
+              period_type: day
+              anchor_date: "2026-04-15"
+              start_date: "2026-04-15"
+              end_date: "2026-04-15"
+              label: "Apr 15, 2026"
+            summary:
+              total_minutes: 135
+              display_total: "2h 15m"
+              task_count: 3
+              daily_log_count: 1
+              highest_time_category: { label: "Work", total_minutes: 105, display_total: "1h 45m" }
+              average_minutes_per_logged_day: null
+            daily_logs:
+              - date: "2026-04-15"
+                total_minutes: 135
+                display_total: "2h 15m"
+                task_count: 3
+                top_category: { label: "Work", total_minutes: 105, display_total: "1h 45m" }
+            period_timeline:
+              - date: "2026-04-15"
+                total_minutes: 135
+                display_total: "2h 15m"
+                has_tasks: true
+            category_breakdown:
+              - label: "Work"
+                total_minutes: 105
+                display_total: "1h 45m"
+                share_of_total: 0.7778
+                is_other: false
+            tag_breakdown:
+              - label: "deep"
+                total_minutes: 90
+                display_total: "1h 30m"
+                share_label: "67% of tracked time"
+                is_untagged: false
+                is_other: false
+            tag_total_notice: null
+            empty_state: null
+    DayDetailSuccess:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data: { $ref: "#/components/schemas/DayDetail" }
+      examples:
+        - success: true
+          data:
+            date: "2026-04-15"
+            total_minutes: 135
+            display_total: "2h 15m"
+            task_count: 3
+            tasks:
+              - id: "00000000-0000-4000-8000-000000000001"
+                title: "Plan dashboard"
+                time_spent_minutes: 45
+                display_time: "45m"
+                category: "Work"
+                tags: ["deep"]
+                note: "Reviewed period filters."
+                source: "csv_import"
+                timeline_position: 0
+            empty_state: null
+    DashboardOverview:
+      type: object
+      required: [period, summary, daily_logs, period_timeline, category_breakdown, tag_breakdown]
+      properties:
+        period: { $ref: "#/components/schemas/DashboardPeriod" }
+        summary: { $ref: "#/components/schemas/DashboardSummary" }
+        daily_logs:
+          type: array
+          description: Date-bounded list for the selected period; no pagination is required.
+          items: { $ref: "#/components/schemas/DailyLogListItem" }
+        period_timeline:
+          type: array
+          items: { $ref: "#/components/schemas/PeriodTimeTimelinePoint" }
+        category_breakdown:
+          type: array
+          items: { $ref: "#/components/schemas/CategoryBreakdownItem" }
+        tag_breakdown:
+          type: array
+          items: { $ref: "#/components/schemas/TagBreakdownItem" }
+        tag_total_notice:
+          type: [string, "null"]
+          examples: ["Tag totals may exceed total tracked time because multi-tag tasks count once for each tag."]
+        empty_state: { $ref: "#/components/schemas/EmptyState" }
+    DashboardPeriod:
+      type: object
+      required: [period_type, anchor_date, start_date, end_date, label]
+      properties:
+        period_type: { type: string, enum: [day, week, month] }
+        anchor_date: { type: string, format: date }
+        start_date: { type: string, format: date }
+        end_date: { type: string, format: date }
+        label: { type: string }
+    DashboardSummary:
+      type: object
+      required: [total_minutes, display_total, task_count, daily_log_count]
+      properties:
+        total_minutes: { type: integer, minimum: 0 }
+        display_total: { type: string, examples: ["2h 15m", "45m"] }
+        task_count: { type: integer, minimum: 0 }
+        daily_log_count: { type: integer, minimum: 0 }
+        highest_time_category: { $ref: "#/components/schemas/NamedTimeTotal" }
+        average_minutes_per_logged_day: { type: [integer, "null"], minimum: 0 }
+    DailyLogListItem:
+      type: object
+      required: [date, total_minutes, display_total, task_count]
+      properties:
+        date: { type: string, format: date }
+        total_minutes: { type: integer, minimum: 0 }
+        display_total: { type: string }
+        task_count: { type: integer, minimum: 0 }
+        top_category: { $ref: "#/components/schemas/NamedTimeTotal" }
+    PeriodTimeTimelinePoint:
+      type: object
+      required: [date, total_minutes, display_total, has_tasks]
+      properties:
+        date: { type: string, format: date }
+        total_minutes: { type: integer, minimum: 0 }
+        display_total: { type: string }
+        has_tasks: { type: boolean }
+    CategoryBreakdownItem:
+      type: object
+      required: [label, total_minutes, display_total, share_of_total, is_other]
+      properties:
+        label: { type: string }
+        total_minutes: { type: integer, minimum: 0 }
+        display_total: { type: string }
+        share_of_total: { type: number, minimum: 0, maximum: 1 }
+        is_other: { type: boolean }
+    TagBreakdownItem:
+      type: object
+      required: [label, total_minutes, display_total, share_label, is_untagged, is_other]
+      properties:
+        label: { type: string }
+        total_minutes: { type: integer, minimum: 0 }
+        display_total: { type: string }
+        share_label: { type: string }
+        is_untagged: { type: boolean }
+        is_other: { type: boolean }
+    DayDetail:
+      type: object
+      required: [date, total_minutes, display_total, task_count, tasks]
+      properties:
+        date: { type: string, format: date }
+        total_minutes: { type: integer, minimum: 0 }
+        display_total: { type: string }
+        task_count: { type: integer, minimum: 0 }
+        tasks:
+          type: array
+          items: { $ref: "#/components/schemas/TaskTimelineItem" }
+        empty_state: { $ref: "#/components/schemas/EmptyState" }
+    TaskTimelineItem:
+      type: object
+      required: [id, title, time_spent_minutes, display_time, category, tags, source, timeline_position]
+      properties:
+        id: { type: string, format: uuid }
+        title: { type: string }
+        time_spent_minutes: { type: integer, minimum: 1 }
+        display_time: { type: string }
+        category: { type: string }
+        tags:
+          type: array
+          items: { type: string }
+        note: { type: [string, "null"] }
+        source: { type: string }
+        timeline_position: { type: integer, minimum: 0 }
+    NamedTimeTotal:
+      type: [object, "null"]
+      required: [label, total_minutes, display_total]
+      properties:
+        label: { type: string }
+        total_minutes: { type: integer, minimum: 0 }
+        display_total: { type: string }
+    EmptyState:
+      type: [object, "null"]
+      required: [code, message]
+      properties:
+        code: { type: string, examples: [NO_TRACKED_DATA] }
+        message: { type: string }

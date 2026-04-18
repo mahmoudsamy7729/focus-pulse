@@ -13,6 +13,8 @@ from app.modules.imports.exceptions import (
     InvalidImportOutcomeError,
     InvalidImportStatusTransitionError,
 )
+from app.modules.analytics.exceptions import DashboardDataQualityError, InvalidDashboardPeriodError
+from app.modules.daily_logs.exceptions import InvalidDailyLogRangeError
 from app.shared.schemas.responses import error_response
 
 
@@ -32,6 +34,21 @@ class AppError(Exception):
 
 
 EXCEPTION_MAP: dict[type[Exception], tuple[int, str, str]] = {
+    InvalidDashboardPeriodError: (
+        status.HTTP_400_BAD_REQUEST,
+        "DASHBOARD_INVALID_PERIOD",
+        "Dashboard period filter is invalid.",
+    ),
+    DashboardDataQualityError: (
+        status.HTTP_409_CONFLICT,
+        "DASHBOARD_DATA_QUALITY_ERROR",
+        "Dashboard data cannot be summarized safely.",
+    ),
+    InvalidDailyLogRangeError: (
+        status.HTTP_400_BAD_REQUEST,
+        "DAILY_LOG_RANGE_INVALID",
+        "Daily log date range is invalid.",
+    ),
     CSVParsingError: (status.HTTP_400_BAD_REQUEST, "CSV_PARSING_ERROR", "CSV file could not be parsed."),
     CSVValidationError: (status.HTTP_400_BAD_REQUEST, "CSV_VALIDATION_ERROR", "CSV file failed validation."),
     ImportPermissionError: (status.HTTP_403_FORBIDDEN, "IMPORT_PERMISSION_DENIED", "Import permission denied."),

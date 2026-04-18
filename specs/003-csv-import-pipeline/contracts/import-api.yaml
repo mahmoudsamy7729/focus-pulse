@@ -30,6 +30,28 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/ImportPreviewSuccess" }
+              examples:
+                mixedRows:
+                  value:
+                    success: true
+                    data:
+                      source_name: tasks.csv
+                      total_rows: 2
+                      valid_row_count: 1
+                      invalid_row_count: 1
+                      valid_rows:
+                        - row_number: 1
+                          date: "2026-04-15"
+                          task: Write Plan
+                          category: Deep Work
+                          time_spent_minutes: 45
+                          tags: [writing]
+                          notes: useful note
+                      invalid_rows:
+                        - row_number: 2
+                          reasons: [date is required]
+                          row_snapshot: { task: Missing Date, category: Admin }
+                      warnings: []
         "400": { $ref: "#/components/responses/ValidationError" }
         "401": { $ref: "#/components/responses/AuthError" }
         "403": { $ref: "#/components/responses/PermissionError" }
@@ -61,6 +83,13 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/ImportAcceptedSuccess" }
+              examples:
+                accepted:
+                  value:
+                    success: true
+                    data:
+                      import_run_id: 00000000-0000-4000-8000-000000000001
+                      status: pending
         "400": { $ref: "#/components/responses/ValidationError" }
         "401": { $ref: "#/components/responses/AuthError" }
         "403": { $ref: "#/components/responses/PermissionError" }

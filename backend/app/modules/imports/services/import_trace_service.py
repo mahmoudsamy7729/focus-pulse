@@ -5,6 +5,7 @@ from app.modules.imports.constants import IMPORT_ROW_OUTCOME_TYPES, ImportRowOut
 from app.modules.imports.exceptions import InvalidImportOutcomeError, InvalidImportStatusTransitionError
 from app.modules.imports.models import ImportRowOutcome, ImportRun
 from app.modules.imports.repositories.import_run_repository import ImportRunRepository
+from app.modules.imports.schemas import ImportRowOutcomePage, ImportRowOutcomeRead, ImportRunPage, ImportRunStatus
 from app.shared.enums.run_status import RunStatus, VALID_RUN_TRANSITIONS
 
 
@@ -90,6 +91,38 @@ class ImportTraceService:
         import_run.failure_reason = failure_reason
         import_run.completed_at = datetime.now(UTC)
         return import_run
+
+    async def list_import_runs(self, owner_id: UUID, page: int, limit: int) -> ImportRunPage:
+        runs, total = await self.repository.list_by_owner(owner_id, page, limit)
+        return ImportRunPage(
+            page=page,
+            limit=limit,
+            total=total,
+            items=[ImportRunStatus.model_validate(run, from_attributes=True) for run in runs],
+        )
+
+    async def get_import_run_for_owner(self, owner_id: UUID, import_run_id: UUID) -> ImportRunStatus | None:
+        import_run = await self.repository.get_by_owner(owner_id, import_run_id)
+        if import_run is None:
+            return None
+        return ImportRunStatus.model_validate(import_run, from_attributes=True)
+
+    async def list_row_outcomes(
+        self,
+        owner_id: UUID,
+        import_run_id: UUID,
+        page: int,
+        limit: int,
+    ) -> ImportRowOutcomePage | None:
+        if await self.repository.get_by_owner(owner_id, import_run_id) is None:
+            return None
+        outcomes, total = await self.repository.list_row_outcomes(owner_id, import_run_id, page, limit)
+        return ImportRowOutcomePage(
+            page=page,
+            limit=limit,
+            total=total,
+            items=[ImportRowOutcomeRead.model_validate(outcome, from_attributes=True) for outcome in outcomes],
+        )
 
     async def _get_required(self, import_run_id: UUID) -> ImportRun:
         import_run = await self.repository.get(import_run_id)

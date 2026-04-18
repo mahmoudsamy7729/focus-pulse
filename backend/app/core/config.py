@@ -2,7 +2,9 @@ from functools import lru_cache
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from app.settings.celery import CelerySettings
 from app.settings.database import DatabaseSettings
+from app.settings.redis import RedisSettings
 
 
 class Settings(BaseSettings):
@@ -13,6 +15,8 @@ class Settings(BaseSettings):
     app_name: str = "FocusPulse"
     environment: str = "local"
     database: DatabaseSettings = DatabaseSettings()
+    redis: RedisSettings = RedisSettings()
+    celery: CelerySettings = CelerySettings()
 
 
 @lru_cache

@@ -19,7 +19,8 @@ npm run test
 npm run build
 ```
 
-Set `NEXT_PUBLIC_API_BASE_URL` when the backend is not available at `http://localhost:8000/api/v1`.
+By default the browser calls the same-origin `/api/v1` path and Next.js proxies it to `http://localhost:8000`.
+Set `API_PROXY_TARGET` when the backend is not available at `http://localhost:8000`.
 
 ## Phase 3 Notes
 

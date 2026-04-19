@@ -2,8 +2,10 @@ from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, File, Header, Query, UploadFile, status
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import CurrentOwner, require_scope
+from app.core.database import commit_session, get_db_session
 from app.core.exceptions import AppError
 from app.modules.imports.constants import DEFAULT_IMPORT_LIMIT, DEFAULT_IMPORT_PAGE, MAX_IMPORT_LIMIT
 from app.modules.imports.exceptions import CSVValidationError, ImportNotFoundError
@@ -43,6 +45,7 @@ async def preview_csv_import(
 @router.post("/csv", status_code=status.HTTP_202_ACCEPTED)
 async def create_csv_import(
     owner: Annotated[CurrentOwner, Depends(require_scope("imports:write"))],
+    session: Annotated[AsyncSession, Depends(get_db_session)],
     service: Annotated[CSVImportService, Depends(get_csv_import_service)],
     file: Annotated[UploadFile, File()],
     idempotency_key: Annotated[str | None, Header(alias="Idempotency-Key")] = None,
@@ -58,6 +61,7 @@ async def create_csv_import(
             idempotency_key=idempotency_key,
         )
     )
+    await commit_session(session)
     return success_response(accepted.model_dump(mode="json"))
 
 

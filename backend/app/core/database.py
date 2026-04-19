@@ -1,3 +1,5 @@
+import inspect
+import logging
 from collections.abc import AsyncIterator
 
 from sqlalchemy.ext.asyncio import AsyncAttrs, AsyncSession, async_sessionmaker, create_async_engine
@@ -20,8 +22,31 @@ engine = create_async_engine(
 )
 
 AsyncSessionLocal = async_sessionmaker(engine, expire_on_commit=False)
+logger = logging.getLogger(__name__)
+
+
+async def _run_after_commit_callbacks(session: AsyncSession) -> None:
+    callbacks = list(session.info.pop("after_commit_callbacks", []))
+    for callback in callbacks:
+        try:
+            result = callback()
+            if inspect.isawaitable(result):
+                await result
+        except Exception:  # noqa: BLE001 - callback failures are logged after commit
+            logger.exception("post_commit_callback_failed")
+
+
+async def commit_session(session: AsyncSession) -> None:
+    await session.commit()
+    await _run_after_commit_callbacks(session)
 
 
 async def get_db_session() -> AsyncIterator[AsyncSession]:
     async with AsyncSessionLocal() as session:
-        yield session
+        session.info.setdefault("after_commit_callbacks", [])
+        try:
+            yield session
+            await commit_session(session)
+        except Exception:
+            await session.rollback()
+            raise

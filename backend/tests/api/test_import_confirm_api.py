@@ -1,5 +1,10 @@
 import pytest
+from httpx import ASGITransport, AsyncClient
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
+from app.core import database
+from app.core.database import Base
+from app.modules.imports import dependencies as import_dependencies
 from app.modules.daily_logs.repositories.daily_log_repository import DailyLogRepository
 from app.modules.daily_logs.services.daily_log_service import DailyLogService
 from app.modules.imports.dependencies import get_csv_import_service
@@ -46,3 +51,46 @@ async def test_confirm_api_returns_accepted_envelope_and_honors_idempotency_head
     assert body["data"]["status"] == "pending"
     assert body["data"]["import_run_id"]
     assert queued
+
+
+@pytest.mark.asyncio
+async def test_confirmed_import_is_visible_to_later_import_requests(monkeypatch) -> None:
+    engine = create_async_engine("sqlite+aiosqlite:///:memory:", echo=False)
+    async with engine.begin() as connection:
+        await connection.run_sync(Base.metadata.create_all)
+
+    session_factory = async_sessionmaker(engine, expire_on_commit=False)
+    monkeypatch.setattr(database, "AsyncSessionLocal", session_factory)
+    monkeypatch.setattr(
+        import_dependencies,
+        "_enqueue_csv_import_after_commit",
+        lambda *_args: {"queued_after_commit": True},
+    )
+    app.dependency_overrides.clear()
+
+    transport = ASGITransport(app=app)
+    try:
+        async with AsyncClient(transport=transport, base_url="http://testserver") as client:
+            create_response = await client.post(
+                "/api/v1/imports/csv",
+                files={
+                    "file": (
+                        "tasks.csv",
+                        b"date,task,category,time_spent_minutes\n2026-04-15,Plan,Work,30\n",
+                        "text/csv",
+                    )
+                },
+            )
+            import_run_id = create_response.json()["data"]["import_run_id"]
+
+            list_response = await client.get("/api/v1/imports")
+            get_response = await client.get(f"/api/v1/imports/{import_run_id}")
+
+        assert create_response.status_code == 202
+        assert list_response.status_code == 200
+        assert get_response.status_code == 200
+        assert list_response.json()["data"]["total"] == 1
+        assert get_response.json()["data"]["id"] == import_run_id
+    finally:
+        app.dependency_overrides.clear()
+        await engine.dispose()

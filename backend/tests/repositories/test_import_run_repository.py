@@ -20,7 +20,7 @@ async def test_import_repository_loads_row_outcomes_for_traceability(async_sessi
     )
     await async_session.commit()
 
-    loaded = await repository.get(import_run.id)
+    loaded = await repository.get(import_run.id, include_row_outcomes=True)
 
     assert loaded is not None
     assert loaded.row_outcomes[0].outcome_type == "skipped"

@@ -67,6 +67,10 @@ class CSVParserService:
 
     @staticmethod
     def _normalize_raw_row(row: dict[str | None, object], header_lookup: dict[str, str]) -> dict[str, str | None]:
+        unwrapped_row = CSVParserService._unwrap_single_field_row(row, header_lookup)
+        if unwrapped_row is not None:
+            return unwrapped_row
+
         normalized_row = {header_lookup[key]: value for key, value in row.items() if key in header_lookup}
         extra_cells = row.get(None)
         if not isinstance(extra_cells, list) or not extra_cells:
@@ -92,6 +96,40 @@ class CSVParserService:
             ):
                 normalized_row[key] = value
         return normalized_row
+
+    @staticmethod
+    def _unwrap_single_field_row(
+        row: dict[str | None, object], header_lookup: dict[str, str]
+    ) -> dict[str, str | None] | None:
+        header_keys = list(header_lookup)
+        extra_cells = row.get(None)
+        if extra_cells:
+            return None
+
+        non_empty_values = [
+            (key, normalize_display_text(str(value)))
+            for key in header_keys
+            if (value := row.get(key)) is not None and normalize_display_text(str(value))
+        ]
+        if len(non_empty_values) != 1:
+            return None
+
+        only_key, wrapped_value = non_empty_values[0]
+        if only_key != header_keys[0]:
+            return None
+
+        try:
+            inner_cells = next(csv.reader([wrapped_value]))
+        except csv.Error:
+            return None
+
+        if len(inner_cells) != len(header_keys):
+            return None
+
+        return {
+            header_lookup[header_key]: value
+            for header_key, value in zip(header_keys, inner_cells, strict=False)
+        }
 
     def _parse_row(self, row_number: int, row: dict[str, str | None]) -> NormalizedImportRow | InvalidImportRow:
         reasons: list[str] = []

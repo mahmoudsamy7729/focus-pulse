@@ -24,6 +24,25 @@ def test_csv_parser_normalizes_headers_dates_duration_tags_and_notes() -> None:
     assert result.valid_rows[1].note is None
 
 
+def test_csv_parser_unwraps_rows_quoted_as_single_fields() -> None:
+    csv_bytes = (
+        "Task,Category,Date,End Time,Notes,Start Time,Status,Tags,time_spent_minutes\n"
+        '"Hot Shower,Personal,""April 12, 2026"",10:30,,10:00,Done,,30"\n'
+        '"Fix bugs,Work,""April 12, 2026"",13:00,,11:50,Done,""backend, bug"",70"\n'
+    ).encode()
+
+    result = CSVParserService().parse(csv_bytes, "wrapped-export.csv")
+
+    assert result.total_rows == 2
+    assert result.invalid_rows == []
+    assert result.valid_rows[0].task_name == "Hot Shower"
+    assert result.valid_rows[0].category_name == "Personal"
+    assert result.valid_rows[0].log_date.isoformat() == "2026-04-12"
+    assert result.valid_rows[0].time_spent_minutes == 30
+    assert result.valid_rows[1].task_name == "Fix bugs"
+    assert result.valid_rows[1].tags == ["backend", "bug"]
+
+
 def test_csv_parser_returns_row_errors_for_invalid_dates_duration_and_required_cells() -> None:
     csv_bytes = (
         "date,task,category,time_spent_minutes,tags,notes\n"

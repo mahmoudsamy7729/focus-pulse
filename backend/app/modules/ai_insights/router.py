@@ -3,8 +3,10 @@ from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Header, Query, status
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import CurrentOwner, require_scope
+from app.core.database import commit_session, get_db_session
 from app.modules.ai_insights.constants import (
     AI_INSIGHT_DEFAULT_LIMIT,
     AI_INSIGHT_DEFAULT_PAGE,
@@ -22,6 +24,7 @@ router = APIRouter()
 @router.post("/runs", status_code=status.HTTP_202_ACCEPTED)
 async def create_ai_insight_run(
     owner: Annotated[CurrentOwner, Depends(require_scope("ai_insights:write"))],
+    session: Annotated[AsyncSession, Depends(get_db_session)],
     service: Annotated[AIInsightRunService, Depends(get_ai_insight_run_service)],
     payload: AIInsightRunCreateRequest,
     idempotency_key: Annotated[str | None, Header(alias="Idempotency-Key")] = None,
@@ -34,6 +37,7 @@ async def create_ai_insight_run(
         idempotency_key=idempotency_key,
         request_id=x_request_id,
     )
+    await commit_session(session)
     return success_response(accepted.model_dump(mode="json"))
 
 
@@ -84,9 +88,11 @@ async def get_ai_insight_run(
 @router.post("/runs/{ai_insight_run_id}/rerun", status_code=status.HTTP_202_ACCEPTED)
 async def rerun_ai_insight_run(
     owner: Annotated[CurrentOwner, Depends(require_scope("ai_insights:write"))],
+    session: Annotated[AsyncSession, Depends(get_db_session)],
     service: Annotated[AIInsightRunService, Depends(get_ai_insight_run_service)],
     ai_insight_run_id: UUID,
     idempotency_key: Annotated[str | None, Header(alias="Idempotency-Key")] = None,
 ) -> dict[str, object]:
     accepted = await service.request_rerun(owner.owner_id, ai_insight_run_id, idempotency_key=idempotency_key)
+    await commit_session(session)
     return success_response(accepted.model_dump(mode="json"))

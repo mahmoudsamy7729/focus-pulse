@@ -16,13 +16,15 @@ class ImportRunRepository:
         await self.session.flush()
         return import_run
 
-    async def get(self, import_run_id: UUID) -> ImportRun | None:
-        result = await self.session.execute(
+    async def get(self, import_run_id: UUID, *, include_row_outcomes: bool = False) -> ImportRun | None:
+        statement = (
             select(ImportRun)
             .where(ImportRun.id == import_run_id, ImportRun.deleted_at.is_(None))
-            .options(selectinload(ImportRun.row_outcomes))
             .execution_options(populate_existing=True)
         )
+        if include_row_outcomes:
+            statement = statement.options(selectinload(ImportRun.row_outcomes))
+        result = await self.session.execute(statement)
         return result.scalar_one_or_none()
 
     async def get_by_owner(self, owner_id: UUID, import_run_id: UUID) -> ImportRun | None:
@@ -33,7 +35,6 @@ class ImportRunRepository:
                 ImportRun.owner_id == owner_id,
                 ImportRun.deleted_at.is_(None),
             )
-            .options(selectinload(ImportRun.row_outcomes))
             .execution_options(populate_existing=True)
         )
         return result.scalar_one_or_none()

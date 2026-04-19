@@ -90,7 +90,8 @@ services:
     restart: unless-stopped
     command: npm run dev -- --hostname 0.0.0.0
     environment:
-      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8000/api/v1}
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-/api/v1}
+      API_PROXY_TARGET: ${API_PROXY_TARGET:-http://backend:8000}
       NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME:-FocusPulse}
       WATCHPACK_POLLING: ${WATCHPACK_POLLING:-true}
     ports:

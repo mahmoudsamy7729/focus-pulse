@@ -14,6 +14,16 @@ from app.modules.imports.exceptions import (
     InvalidImportStatusTransitionError,
 )
 from app.modules.analytics.exceptions import DashboardDataQualityError, InvalidDashboardPeriodError
+from app.modules.ai_insights.exceptions import (
+    AIInsightConflictError,
+    AIInsightEnqueueError,
+    AIInsightIdempotencyConflictError,
+    AIInsightNotFoundError,
+    AIOutputValidationError,
+    AIProviderFailureError,
+    InvalidAIInsightStatusTransitionError,
+    InvalidAIInsightTargetPeriodError,
+)
 from app.modules.daily_logs.exceptions import InvalidDailyLogRangeError
 from app.shared.schemas.responses import error_response
 
@@ -59,6 +69,46 @@ EXCEPTION_MAP: dict[type[Exception], tuple[int, str, str]] = {
         status.HTTP_400_BAD_REQUEST,
         "IMPORT_STATUS_INVALID",
         "Import status transition is invalid.",
+    ),
+    InvalidAIInsightTargetPeriodError: (
+        status.HTTP_400_BAD_REQUEST,
+        "AI_INSIGHT_INVALID_PERIOD",
+        "AI insight period is invalid.",
+    ),
+    AIInsightNotFoundError: (
+        status.HTTP_404_NOT_FOUND,
+        "AI_INSIGHT_NOT_FOUND",
+        "AI insight run not found.",
+    ),
+    AIInsightConflictError: (
+        status.HTTP_409_CONFLICT,
+        "AI_INSIGHT_CONFLICT",
+        "AI insight request conflicts with an existing run.",
+    ),
+    AIInsightIdempotencyConflictError: (
+        status.HTTP_409_CONFLICT,
+        "AI_INSIGHT_IDEMPOTENCY_CONFLICT",
+        "AI insight idempotency key conflicts with an existing run.",
+    ),
+    AIInsightEnqueueError: (
+        status.HTTP_409_CONFLICT,
+        "AI_INSIGHT_ENQUEUE_FAILED",
+        "AI insight run could not be enqueued.",
+    ),
+    AIProviderFailureError: (
+        status.HTTP_502_BAD_GATEWAY,
+        "AI_PROVIDER_FAILURE",
+        "AI provider failed.",
+    ),
+    AIOutputValidationError: (
+        status.HTTP_400_BAD_REQUEST,
+        "AI_OUTPUT_VALIDATION_FAILED",
+        "AI provider output failed validation.",
+    ),
+    InvalidAIInsightStatusTransitionError: (
+        status.HTTP_400_BAD_REQUEST,
+        "AI_INSIGHT_STATUS_INVALID",
+        "AI insight status transition is invalid.",
     ),
 }
 

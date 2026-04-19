@@ -1,0 +1,455 @@
+openapi: 3.1.0
+info:
+  title: FocusPulse AI Insights API
+  version: 0.1.0
+  description: Phase 4 contract for requesting, rerunning, reviewing, and listing AI analysis runs.
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+paths:
+  /ai-insights/runs:
+    post:
+      summary: Request a combined daily or weekly AI analysis run
+      operationId: createAIInsightRun
+      security:
+        - bearerAuth: [ai_insights:write]
+      x-rate-limit: { limit: 5, window: 1 minute }
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: false
+          schema: { type: string, minLength: 8, maxLength: 128 }
+        - name: X-Request-Id
+          in: header
+          required: false
+          schema: { type: string, minLength: 1, maxLength: 128 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AIInsightRunCreateRequest" }
+            examples:
+              daily:
+                value:
+                  period_granularity: daily
+                  anchor_date: "2026-04-15"
+      responses:
+        "202":
+          description: Analysis run accepted or existing idempotent run returned.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AIInsightRunAcceptedSuccess" }
+              examples:
+                accepted:
+                  value:
+                    success: true
+                    data:
+                      ai_insight_run_id: "00000000-0000-4000-8000-000000000101"
+                      status: pending
+                      period_granularity: daily
+                      period_start: "2026-04-15"
+                      period_end: "2026-04-15"
+                      reused_existing: false
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/AuthError" }
+        "403": { $ref: "#/components/responses/PermissionError" }
+        "409": { $ref: "#/components/responses/ConflictError" }
+        "429": { $ref: "#/components/responses/RateLimitError" }
+    get:
+      summary: List AI analysis run history
+      operationId: listAIInsightRuns
+      security:
+        - bearerAuth: [ai_insights:read]
+      x-rate-limit: { limit: 60, window: 1 minute }
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Limit"
+        - name: period_granularity
+          in: query
+          required: false
+          schema: { type: string, enum: [daily, weekly] }
+        - name: status
+          in: query
+          required: false
+          schema: { $ref: "#/components/schemas/RunStatus" }
+        - name: start_date
+          in: query
+          required: false
+          schema: { type: string, format: date }
+        - name: end_date
+          in: query
+          required: false
+          schema: { type: string, format: date }
+      responses:
+        "200":
+          description: Paginated AI run history.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AIInsightRunPageSuccess" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/AuthError" }
+        "403": { $ref: "#/components/responses/PermissionError" }
+        "429": { $ref: "#/components/responses/RateLimitError" }
+  /ai-insights/runs/current:
+    get:
+      summary: Get the current completed analysis result for a day or week
+      operationId: getCurrentAIInsightRun
+      security:
+        - bearerAuth: [ai_insights:read]
+      x-rate-limit: { limit: 60, window: 1 minute }
+      parameters:
+        - name: period_granularity
+          in: query
+          required: true
+          schema: { type: string, enum: [daily, weekly] }
+        - name: anchor_date
+          in: query
+          required: true
+          schema: { type: string, format: date }
+      responses:
+        "200":
+          description: Current completed AI run for the resolved period, or an empty current-result payload.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CurrentAIInsightRunSuccess" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/AuthError" }
+        "403": { $ref: "#/components/responses/PermissionError" }
+        "429": { $ref: "#/components/responses/RateLimitError" }
+  /ai-insights/runs/{ai_insight_run_id}:
+    get:
+      summary: Get one AI analysis run with output or failure details
+      operationId: getAIInsightRun
+      security:
+        - bearerAuth: [ai_insights:read]
+      x-rate-limit: { limit: 60, window: 1 minute }
+      parameters:
+        - $ref: "#/components/parameters/AIInsightRunId"
+      responses:
+        "200":
+          description: AI run detail.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AIInsightRunSuccess" }
+              examples:
+                noDataRun:
+                  value:
+                    success: true
+                    data:
+                      id: "00000000-0000-4000-8000-000000000101"
+                      status: completed
+                      period_granularity: daily
+                      period_start: "2026-04-15"
+                      period_end: "2026-04-15"
+                      instruction_name: daily_combined_analysis
+                      instruction_version: "2026-04-19.v1"
+                      output_outcome: no_data
+                      source_summary:
+                        source_daily_log_ids: []
+                        daily_log_count: 0
+                        task_count: 0
+                        total_minutes: 0
+                        included_fields: [task_names, durations, categories, tags]
+                        excluded_fields: [note_text]
+                      output_summary:
+                        output_outcome: no_data
+                        generated_at: "2026-04-15T12:00:00Z"
+                        summary: null
+                        detected_patterns: []
+                        behavior_insights: []
+                        supporting_evidence: []
+                        limitations: [No saved tracking records were available for this period.]
+                      failure_reason: null
+                      failure_details: []
+                      retry_count: 0
+                      max_attempts: 3
+                      started_at: "2026-04-15T12:00:00Z"
+                      completed_at: "2026-04-15T12:00:01Z"
+                      created_at: "2026-04-15T12:00:00Z"
+        "401": { $ref: "#/components/responses/AuthError" }
+        "403": { $ref: "#/components/responses/PermissionError" }
+        "404": { $ref: "#/components/responses/NotFoundError" }
+  /ai-insights/runs/{ai_insight_run_id}/rerun:
+    post:
+      summary: Rerun analysis for the same period and granularity
+      operationId: rerunAIInsightRun
+      security:
+        - bearerAuth: [ai_insights:write]
+      x-rate-limit: { limit: 5, window: 1 minute }
+      parameters:
+        - $ref: "#/components/parameters/AIInsightRunId"
+        - name: Idempotency-Key
+          in: header
+          required: false
+          schema: { type: string, minLength: 8, maxLength: 128 }
+      responses:
+        "202":
+          description: Rerun accepted for background processing.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AIInsightRunAcceptedSuccess" }
+        "401": { $ref: "#/components/responses/AuthError" }
+        "403": { $ref: "#/components/responses/PermissionError" }
+        "404": { $ref: "#/components/responses/NotFoundError" }
+        "409": { $ref: "#/components/responses/ConflictError" }
+        "429": { $ref: "#/components/responses/RateLimitError" }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    AIInsightRunId:
+      name: ai_insight_run_id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    Page:
+      name: page
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, default: 1 }
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+  responses:
+    ValidationError:
+      description: Invalid period, request, or output.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    AuthError:
+      description: Authentication required or invalid.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    PermissionError:
+      description: Authenticated user lacks the required AI insights scope.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    ConflictError:
+      description: Conflicting in-flight run or duplicate request conflict.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    RateLimitError:
+      description: Rate limit exceeded.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    NotFoundError:
+      description: AI insight run not found for the current owner.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [success, error]
+      properties:
+        success: { type: boolean, const: false }
+        error:
+          type: object
+          required: [code, message, details]
+          properties:
+            code: { type: string, examples: [AI_INSIGHT_NOT_FOUND] }
+            message: { type: string }
+            details: { type: object }
+    AIInsightRunCreateRequest:
+      type: object
+      required: [period_granularity, anchor_date]
+      properties:
+        period_granularity: { type: string, enum: [daily, weekly] }
+        anchor_date: { type: string, format: date }
+    AIInsightRunAcceptedSuccess:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [ai_insight_run_id, status, period_granularity, period_start, period_end]
+          properties:
+            ai_insight_run_id: { type: string, format: uuid }
+            status: { $ref: "#/components/schemas/RunStatus" }
+            period_granularity: { type: string, enum: [daily, weekly] }
+            period_start: { type: string, format: date }
+            period_end: { type: string, format: date }
+            reused_existing: { type: boolean, default: false }
+    AIInsightRunSuccess:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data: { $ref: "#/components/schemas/AIInsightRun" }
+    AIInsightRunPageSuccess:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data: { $ref: "#/components/schemas/AIInsightRunPage" }
+    CurrentAIInsightRunSuccess:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [period_granularity, period_start, period_end, current_run]
+          properties:
+            period_granularity: { type: string, enum: [daily, weekly] }
+            period_start: { type: string, format: date }
+            period_end: { type: string, format: date }
+            current_run: { $ref: "#/components/schemas/NullableAIInsightRun" }
+    RunStatus:
+      type: string
+      enum: [pending, processing, completed, completed_with_errors, failed]
+    OutputOutcome:
+      type: string
+      enum: [analysis_generated, no_data]
+    NullableAIInsightRun:
+      oneOf:
+        - $ref: "#/components/schemas/AIInsightRun"
+        - type: "null"
+    AIInsightRun:
+      type: object
+      required:
+        - id
+        - status
+        - period_granularity
+        - period_start
+        - period_end
+        - source_summary
+        - retry_count
+        - max_attempts
+        - created_at
+      properties:
+        id: { type: string, format: uuid }
+        status: { $ref: "#/components/schemas/RunStatus" }
+        period_granularity: { type: string, enum: [daily, weekly] }
+        period_start: { type: string, format: date }
+        period_end: { type: string, format: date }
+        instruction_name: { type: [string, "null"] }
+        instruction_version: { type: [string, "null"] }
+        output_outcome:
+          oneOf:
+            - $ref: "#/components/schemas/OutputOutcome"
+            - type: "null"
+        source_summary: { $ref: "#/components/schemas/AnalysisInputSummary" }
+        output_summary:
+          oneOf:
+            - $ref: "#/components/schemas/CombinedAnalysisOutput"
+            - type: "null"
+        failure_reason: { type: [string, "null"] }
+        failure_details:
+          type: array
+          items: { $ref: "#/components/schemas/RunFailureDetail" }
+        retry_count: { type: integer, minimum: 0, maximum: 2 }
+        max_attempts: { type: integer, minimum: 1, maximum: 3 }
+        started_at: { type: [string, "null"], format: date-time }
+        completed_at: { type: [string, "null"], format: date-time }
+        created_at: { type: string, format: date-time }
+    AnalysisInputSummary:
+      type: object
+      required: [source_daily_log_ids, daily_log_count, task_count, total_minutes, included_fields, excluded_fields]
+      properties:
+        period_granularity: { type: [string, "null"], enum: [daily, weekly, null] }
+        period_start: { type: [string, "null"], format: date }
+        period_end: { type: [string, "null"], format: date }
+        source_daily_log_ids:
+          type: array
+          items: { type: string, format: uuid }
+        daily_log_count: { type: integer, minimum: 0 }
+        task_count: { type: integer, minimum: 0 }
+        total_minutes: { type: integer, minimum: 0 }
+        category_totals:
+          type: array
+          items: { $ref: "#/components/schemas/NamedMinuteTotal" }
+        tag_totals:
+          type: array
+          items: { $ref: "#/components/schemas/NamedMinuteTotal" }
+        daily_totals:
+          type: array
+          items:
+            type: object
+            required: [date, total_minutes]
+            properties:
+              date: { type: string, format: date }
+              total_minutes: { type: integer, minimum: 0 }
+        included_fields:
+          type: array
+          items: { type: string }
+          examples: [[task_names, durations, categories, tags]]
+        excluded_fields:
+          type: array
+          items: { type: string }
+          examples: [[note_text]]
+    CombinedAnalysisOutput:
+      type: object
+      required: [output_outcome, generated_at, summary, detected_patterns, behavior_insights, supporting_evidence, limitations]
+      properties:
+        output_outcome: { $ref: "#/components/schemas/OutputOutcome" }
+        generated_at: { type: string, format: date-time }
+        summary: { type: [string, "null"] }
+        detected_patterns:
+          type: array
+          items: { $ref: "#/components/schemas/AnalysisObservation" }
+        behavior_insights:
+          type: array
+          items: { $ref: "#/components/schemas/AnalysisObservation" }
+        supporting_evidence:
+          type: array
+          items: { $ref: "#/components/schemas/SupportingEvidence" }
+        limitations:
+          type: array
+          items: { type: string }
+    AnalysisObservation:
+      type: object
+      required: [text, evidence_ids]
+      properties:
+        text: { type: string }
+        evidence_ids:
+          type: array
+          minItems: 1
+          items: { type: string }
+    SupportingEvidence:
+      type: object
+      required: [evidence_id, evidence_type]
+      properties:
+        evidence_id: { type: string }
+        evidence_type: { type: string, enum: [date_total, category_total, tag_total, task_count, task_reference, duration_outlier] }
+        source_date: { type: [string, "null"], format: date }
+        source_task_id: { type: [string, "null"], format: uuid }
+        label: { type: [string, "null"] }
+        minutes: { type: [integer, "null"], minimum: 0 }
+        count: { type: [integer, "null"], minimum: 0 }
+    RunFailureDetail:
+      type: object
+      required: [stage, reason, attempt_number, transient, occurred_at]
+      properties:
+        stage: { type: string, enum: [input_preparation, provider_call, output_validation, persistence, worker_execution] }
+        reason: { type: string }
+        attempt_number: { type: integer, minimum: 1, maximum: 3 }
+        transient: { type: boolean }
+        occurred_at: { type: string, format: date-time }
+    NamedMinuteTotal:
+      type: object
+      required: [label, total_minutes]
+      properties:
+        label: { type: string }
+        total_minutes: { type: integer, minimum: 0 }
+    AIInsightRunPage:
+      type: object
+      required: [page, limit, items]
+      properties:
+        page: { type: integer, minimum: 1 }
+        limit: { type: integer, minimum: 1 }
+        total: { type: integer, minimum: 0 }
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/AIInsightRun" }

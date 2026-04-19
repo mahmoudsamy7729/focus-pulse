@@ -151,6 +151,23 @@ Phase 2 now implements the backend CSV import pipeline under
 Phase 2 still does not add dashboard visualization, AI execution, scheduled
 imports, Notion API synchronization, report export, or production hardening.
 
+## Phase 4 Implementation Notes
+
+Phase 4 implements the backend AI analysis engine under
+`backend/app/modules/ai_insights/`:
+
+- AI settings are composed under `backend/app/settings/ai.py`.
+- `AIInsightRun` stores instruction metadata, output outcome, retry count,
+  idempotency key, request ID, and structured failure details.
+- AI inputs include task names, durations, categories, tags, and aggregates only.
+  Note text and full structured provider inputs are not retained.
+- `/api/v1/ai-insights` exposes create, detail, history, current result, and
+  rerun endpoints using standard success/error envelopes.
+
+Phase 4 still does not add dashboard visualization changes, productivity scores,
+recommendations, scheduled automation, AI chat, report export, or Notion API
+synchronization.
+
 ## Frontend Architecture Rules
 
 - `frontend/app/` owns routing, layouts, page composition, and server/client

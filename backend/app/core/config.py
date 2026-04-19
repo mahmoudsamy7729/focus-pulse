@@ -3,6 +3,7 @@ from functools import lru_cache
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from app.settings.celery import CelerySettings
+from app.settings.ai import AISettings
 from app.settings.database import DatabaseSettings
 from app.settings.redis import RedisSettings
 
@@ -17,6 +18,7 @@ class Settings(BaseSettings):
     database: DatabaseSettings = DatabaseSettings()
     redis: RedisSettings = RedisSettings()
     celery: CelerySettings = CelerySettings()
+    ai: AISettings = AISettings()
 
 
 @lru_cache

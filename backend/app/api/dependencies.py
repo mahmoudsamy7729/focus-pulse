@@ -12,6 +12,7 @@ SCOPE_ERROR_PREFIXES = {
     "imports": "IMPORT",
     "analytics": "ANALYTICS",
     "daily_logs": "DAILY_LOGS",
+    "ai_insights": "AI_INSIGHTS",
 }
 
 
@@ -27,7 +28,16 @@ async def get_current_owner(
     _ = x_request_id
     return CurrentOwner(
         owner_id=DEFAULT_OWNER_ID,
-        scopes=frozenset({"imports:read", "imports:write", "analytics:read", "daily_logs:read"}),
+        scopes=frozenset(
+            {
+                "imports:read",
+                "imports:write",
+                "analytics:read",
+                "daily_logs:read",
+                "ai_insights:read",
+                "ai_insights:write",
+            }
+        ),
     )
 
 

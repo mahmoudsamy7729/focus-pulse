@@ -40,6 +40,17 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/AIInsightRunAcceptedSuccess" }
+              examples:
+                accepted:
+                  value:
+                    success: true
+                    data:
+                      ai_insight_run_id: "00000000-0000-4000-8000-000000000101"
+                      status: pending
+                      period_granularity: daily
+                      period_start: "2026-04-15"
+                      period_end: "2026-04-15"
+                      reused_existing: false
         "400": { $ref: "#/components/responses/ValidationError" }
         "401": { $ref: "#/components/responses/AuthError" }
         "403": { $ref: "#/components/responses/PermissionError" }
@@ -121,6 +132,41 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/AIInsightRunSuccess" }
+              examples:
+                noDataRun:
+                  value:
+                    success: true
+                    data:
+                      id: "00000000-0000-4000-8000-000000000101"
+                      status: completed
+                      period_granularity: daily
+                      period_start: "2026-04-15"
+                      period_end: "2026-04-15"
+                      instruction_name: daily_combined_analysis
+                      instruction_version: "2026-04-19.v1"
+                      output_outcome: no_data
+                      source_summary:
+                        source_daily_log_ids: []
+                        daily_log_count: 0
+                        task_count: 0
+                        total_minutes: 0
+                        included_fields: [task_names, durations, categories, tags]
+                        excluded_fields: [note_text]
+                      output_summary:
+                        output_outcome: no_data
+                        generated_at: "2026-04-15T12:00:00Z"
+                        summary: null
+                        detected_patterns: []
+                        behavior_insights: []
+                        supporting_evidence: []
+                        limitations: [No saved tracking records were available for this period.]
+                      failure_reason: null
+                      failure_details: []
+                      retry_count: 0
+                      max_attempts: 3
+                      started_at: "2026-04-15T12:00:00Z"
+                      completed_at: "2026-04-15T12:00:01Z"
+                      created_at: "2026-04-15T12:00:00Z"
         "401": { $ref: "#/components/responses/AuthError" }
         "403": { $ref: "#/components/responses/PermissionError" }
         "404": { $ref: "#/components/responses/NotFoundError" }
@@ -312,6 +358,9 @@ components:
       type: object
       required: [source_daily_log_ids, daily_log_count, task_count, total_minutes, included_fields, excluded_fields]
       properties:
+        period_granularity: { type: [string, "null"], enum: [daily, weekly, null] }
+        period_start: { type: [string, "null"], format: date }
+        period_end: { type: [string, "null"], format: date }
         source_daily_log_ids:
           type: array
           items: { type: string, format: uuid }

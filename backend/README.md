@@ -33,3 +33,16 @@ pytest tests/domain tests/repositories tests/api tests/workers -q
 The Phase 2 suite covers CSV parsing and preview behavior, confirmed import
 execution, status/history APIs, worker delegation, standard response envelopes,
 pagination, and raw CSV non-retention.
+
+## Phase 4 test commands
+
+After syncing Phase 4 backend dependencies, validate the AI analysis engine with:
+
+```powershell
+Set-Location backend
+pytest tests/domain tests/services tests/repositories tests/api tests/workers tests/migrations -q
+```
+
+The Phase 4 suite covers AI settings, daily/weekly input preparation, note-text
+exclusion, output validation, idempotency, run history/current/rerun APIs,
+retry/failure metadata, and thin Celery worker delegation.

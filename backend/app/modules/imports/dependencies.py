@@ -17,6 +17,22 @@ from app.modules.tasks.repositories.task_repository import CategoryRepository, T
 from app.modules.tasks.services.task_service import TaskService
 
 
+def _enqueue_csv_import_after_commit(
+    session: AsyncSession,
+    import_run_id,
+    owner_id,
+    valid_rows: list[dict[str, object]],
+    invalid_rows: list[dict[str, object]],
+) -> object:
+    def enqueue() -> object:
+        from app.workers.tasks.import_tasks import process_csv_import
+
+        return process_csv_import.delay(str(import_run_id), str(owner_id), valid_rows, invalid_rows)
+
+    session.info.setdefault("after_commit_callbacks", []).append(enqueue)
+    return {"queued_after_commit": True}
+
+
 def get_import_run_repository(session: Annotated[AsyncSession, Depends(get_db_session)]) -> ImportRunRepository:
     return ImportRunRepository(session)
 
@@ -54,9 +70,22 @@ def get_task_service(
 
 
 def get_csv_import_service(
+    session: Annotated[AsyncSession, Depends(get_db_session)],
     parser: Annotated[CSVParserService, Depends(get_csv_parser_service)],
     import_trace_service: Annotated[ImportTraceService, Depends(get_import_trace_service)],
     daily_log_service: Annotated[DailyLogService, Depends(get_daily_log_service)],
     task_service: Annotated[TaskService, Depends(get_task_service)],
 ) -> CSVImportService:
-    return CSVImportService(parser, import_trace_service, daily_log_service, task_service)
+    return CSVImportService(
+        parser,
+        import_trace_service,
+        daily_log_service,
+        task_service,
+        enqueue_import=lambda import_run_id, owner_id, valid_rows, invalid_rows: _enqueue_csv_import_after_commit(
+            session,
+            import_run_id,
+            owner_id,
+            valid_rows,
+            invalid_rows,
+        ),
+    )

@@ -1,4 +1,3 @@
-import asyncio
 from uuid import UUID
 
 from app.core.database import AsyncSessionLocal
@@ -13,6 +12,7 @@ from app.modules.notes.repositories.note_repository import NoteRepository
 from app.modules.notes.services.note_service import NoteService
 from app.modules.tasks.repositories.task_repository import CategoryRepository, TaskRepository
 from app.modules.tasks.services.task_service import TaskService
+from app.workers.asyncio_runner import run_async
 from app.workers.celery_app import celery_app
 
 
@@ -54,7 +54,7 @@ if celery_app is not None:
         valid_rows: list[dict[str, object]],
         invalid_rows: list[dict[str, object]] | None = None,
     ) -> dict[str, object]:
-        return asyncio.run(
+        return run_async(
             process_csv_import_payload(
                 UUID(import_run_id),
                 UUID(owner_id),

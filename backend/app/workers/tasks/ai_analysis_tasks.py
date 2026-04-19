@@ -1,4 +1,3 @@
-import asyncio
 from uuid import UUID
 
 from app.core.database import AsyncSessionLocal
@@ -9,6 +8,7 @@ from app.modules.ai_insights.services.ai_input_service import AIInputService
 from app.modules.ai_insights.services.ai_instruction_service import AIInstructionService
 from app.modules.ai_insights.services.ai_output_validator import AIOutputValidator
 from app.modules.daily_logs.repositories.daily_log_repository import DailyLogRepository
+from app.workers.asyncio_runner import run_async
 from app.workers.celery_app import celery_app
 
 
@@ -31,7 +31,7 @@ if celery_app is not None:
 
     @celery_app.task(name="ai_insights.process_analysis_run")
     def process_ai_analysis_run(ai_insight_run_id: str, owner_id: str) -> dict[str, object]:
-        return asyncio.run(process_ai_analysis_run_payload(UUID(ai_insight_run_id), UUID(owner_id)))
+        return run_async(process_ai_analysis_run_payload(UUID(ai_insight_run_id), UUID(owner_id)))
 
 else:
 

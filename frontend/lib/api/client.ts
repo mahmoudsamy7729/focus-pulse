@@ -1,8 +1,32 @@
 import axios, { AxiosError } from "axios";
 import { FocusPulseApiError, type ApiEnvelope } from "./types";
 
+const SAME_ORIGIN_API_BASE_URL = "/api/v1";
+const LOCAL_BACKEND_ORIGINS = new Set(["http://localhost:8000", "http://127.0.0.1:8000"]);
+
+export function resolveApiBaseUrl(configuredBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL): string {
+  if (!configuredBaseUrl) {
+    return SAME_ORIGIN_API_BASE_URL;
+  }
+
+  if (typeof window === "undefined") {
+    return configuredBaseUrl;
+  }
+
+  try {
+    const parsed = new URL(configuredBaseUrl, window.location.origin);
+    if (LOCAL_BACKEND_ORIGINS.has(parsed.origin)) {
+      return parsed.pathname || SAME_ORIGIN_API_BASE_URL;
+    }
+  } catch {
+    return configuredBaseUrl;
+  }
+
+  return configuredBaseUrl;
+}
+
 export const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000/api/v1",
+  baseURL: resolveApiBaseUrl(),
   headers: {
     "Content-Type": "application/json"
   }

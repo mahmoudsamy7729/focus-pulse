@@ -15,22 +15,34 @@ from app.modules.ai_insights.providers.base import AIAnalysisProvider
 from app.modules.ai_insights.providers.configured import get_configured_ai_provider
 
 
+def _enqueue_analysis_run_after_commit(session: AsyncSession, ai_insight_run_id, owner_id) -> object:
+    def enqueue() -> object:
+        from app.workers.tasks.ai_analysis_tasks import process_ai_analysis_run
+
+        return process_ai_analysis_run.delay(str(ai_insight_run_id), str(owner_id))
+
+    session.info.setdefault("after_commit_callbacks", []).append(enqueue)
+    return {"queued_after_commit": True}
+
+
 def get_ai_insight_run_repository(
     session: Annotated[AsyncSession, Depends(get_db_session)],
 ) -> AIInsightRunRepository:
     return AIInsightRunRepository(session)
 
 
-def _enqueue_analysis_run(ai_insight_run_id, owner_id) -> object:
-    from app.workers.tasks.ai_analysis_tasks import process_ai_analysis_run
-
-    return process_ai_analysis_run.delay(str(ai_insight_run_id), str(owner_id))
-
-
 def get_ai_insight_run_service(
+    session: Annotated[AsyncSession, Depends(get_db_session)],
     repository: Annotated[AIInsightRunRepository, Depends(get_ai_insight_run_repository)],
 ) -> AIInsightRunService:
-    return AIInsightRunService(repository, enqueue_analysis_run=_enqueue_analysis_run)
+    return AIInsightRunService(
+        repository,
+        enqueue_analysis_run=lambda ai_insight_run_id, owner_id: _enqueue_analysis_run_after_commit(
+            session,
+            ai_insight_run_id,
+            owner_id,
+        ),
+    )
 
 
 def get_ai_input_service(session: Annotated[AsyncSession, Depends(get_db_session)]) -> AIInputService:

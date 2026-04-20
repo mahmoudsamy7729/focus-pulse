@@ -13,7 +13,7 @@ from app.shared.enums.source import DEFAULT_SOURCE
 from app.shared.models.base import SoftDeleteMixin, TimestampMixin, UUIDPrimaryKeyMixin
 
 if TYPE_CHECKING:
-    from app.modules.ai_insights.models import AIInsightRunSource
+    from app.modules.ai_insights.models import AIInsightResultSource, AIInsightRunSource
     from app.modules.tasks.models import Task
 
 
@@ -41,4 +41,4 @@ Index(
 )
 
 # Register the reverse relationship target when DailyLog is imported at runtime.
-from app.modules.ai_insights.models import AIInsightRunSource  # noqa: E402,F401
+from app.modules.ai_insights.models import AIInsightResultSource, AIInsightRunSource  # noqa: E402,F401

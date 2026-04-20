@@ -49,3 +49,21 @@ export async function getApiData<T>(url: string, params?: Record<string, string 
     throw error;
   }
 }
+
+export async function postApiData<T, TBody = unknown>(url: string, body?: TBody): Promise<T> {
+  try {
+    const response = await apiClient.post<ApiEnvelope<T>>(url, body);
+    if (response.data.success) {
+      return response.data.data;
+    }
+    throw new FocusPulseApiError(response.data.error, response.status);
+  } catch (error) {
+    if (error instanceof AxiosError && error.response?.data) {
+      const responseBody = error.response.data as ApiEnvelope<unknown>;
+      if (!responseBody.success) {
+        throw new FocusPulseApiError(responseBody.error, error.response.status);
+      }
+    }
+    throw error;
+  }
+}

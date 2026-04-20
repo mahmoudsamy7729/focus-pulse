@@ -17,11 +17,11 @@
 
 **Purpose**: Create Phase 5 backend/frontend placeholders and test package scaffolding needed before implementation begins.
 
-- [ ] T001 Create Phase 5 backend service placeholders in `backend/app/modules/ai_insights/services/insight_generation_service.py`, `backend/app/modules/ai_insights/services/insight_source_service.py`, `backend/app/modules/ai_insights/services/productivity_scoring_service.py`, `backend/app/modules/ai_insights/services/consistency_scoring_service.py`, `backend/app/modules/ai_insights/services/day_ranking_service.py`, `backend/app/modules/ai_insights/services/recommendation_service.py`, `backend/app/modules/ai_insights/services/insight_validation_service.py`, and `backend/app/modules/ai_insights/services/insight_result_service.py`
-- [ ] T002 [P] Create Phase 5 result repository placeholder in `backend/app/modules/ai_insights/repositories/ai_insight_result_repository.py`
-- [ ] T003 [P] Create Phase 5 frontend feature folders and package markers in `frontend/features/ai-insights/hooks/.gitkeep` and `frontend/features/ai-insights/components/.gitkeep`
-- [ ] T004 [P] Create Phase 5 test package markers in `backend/tests/domain/__init__.py`, `backend/tests/services/__init__.py`, `backend/tests/repositories/__init__.py`, `backend/tests/api/__init__.py`, `backend/tests/migrations/__init__.py`, and `frontend/features/ai-insights/components/.gitkeep`
-- [ ] T005 [P] Add Phase 5 implementation notes and deterministic-generation guardrails to `backend/app/modules/ai_insights/README.md`
+- [X] T001 Create Phase 5 backend service placeholders in `backend/app/modules/ai_insights/services/insight_generation_service.py`, `backend/app/modules/ai_insights/services/insight_source_service.py`, `backend/app/modules/ai_insights/services/productivity_scoring_service.py`, `backend/app/modules/ai_insights/services/consistency_scoring_service.py`, `backend/app/modules/ai_insights/services/day_ranking_service.py`, `backend/app/modules/ai_insights/services/recommendation_service.py`, `backend/app/modules/ai_insights/services/insight_validation_service.py`, and `backend/app/modules/ai_insights/services/insight_result_service.py`
+- [X] T002 [P] Create Phase 5 result repository placeholder in `backend/app/modules/ai_insights/repositories/ai_insight_result_repository.py`
+- [X] T003 [P] Create Phase 5 frontend feature folders and package markers in `frontend/features/ai-insights/hooks/.gitkeep` and `frontend/features/ai-insights/components/.gitkeep`
+- [X] T004 [P] Create Phase 5 test package markers in `backend/tests/domain/__init__.py`, `backend/tests/services/__init__.py`, `backend/tests/repositories/__init__.py`, `backend/tests/api/__init__.py`, `backend/tests/migrations/__init__.py`, and `frontend/features/ai-insights/components/.gitkeep`
+- [X] T005 [P] Add Phase 5 implementation notes and deterministic-generation guardrails to `backend/app/modules/ai_insights/README.md`
 
 ---
 
@@ -31,23 +31,23 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T006 [P] Add migration tests for `AIInsightResult` and `AIInsightResultSource` tables, indexes, JSON fields, soft delete, and current-result constraints in `backend/tests/migrations/test_insight_results_migration.py`
-- [ ] T007 [P] Add model tests for Phase 5 result fields, source relationships, status values, and soft-delete defaults in `backend/tests/domain/test_ai_insight_results.py`
-- [ ] T008 [P] Add exception mapping tests for missing analysis, invalid source analysis, result validation failure, idempotency conflict, and result not found in `backend/tests/api/test_ai_insight_results_api_errors.py`
-- [ ] T009 Define Phase 5 constants for period granularity, result status, score state, confidence, generation reason, validator version, pagination defaults, and rate-limit names in `backend/app/modules/ai_insights/constants.py`
-- [ ] T010 Define Phase 5 custom exceptions for invalid insight period, missing source analysis, invalid source analysis, insight result not found, generation conflict, and insight validation failure in `backend/app/modules/ai_insights/exceptions.py`
-- [ ] T011 Add Phase 5 exception mappings to unified error handling in `backend/app/core/exceptions.py`
-- [ ] T012 Add or verify `ai_insights:read` and `ai_insights:write` scope support for Phase 5 endpoints in `backend/app/api/dependencies.py`
-- [ ] T013 Extend AI insights ORM models with `AIInsightResult` and `AIInsightResultSource` in `backend/app/modules/ai_insights/models.py`
-- [ ] T014 Add Alembic migration for Phase 5 insight result tables, source links, JSON payload columns, indexes, current marker, and soft delete in `backend/alembic/versions/006_insights_recommendations.py`
-- [ ] T015 Define base Phase 5 schemas for insight period requests, result status, source snapshot, score outcome, score factor, evidence, validation outcome, and paginated result responses in `backend/app/modules/ai_insights/schemas.py`
-- [ ] T016 Implement base result repository methods for create, get by owner, current lookup, source links, default-generation reuse lookup, current marker updates, soft-delete exclusion, and paginated history in `backend/app/modules/ai_insights/repositories/ai_insight_result_repository.py`
-- [ ] T017 Extend AI insight run repository methods for completed source analysis lookup by owner, period, granularity, and optional run ID in `backend/app/modules/ai_insights/repositories/ai_insight_run_repository.py`
-- [ ] T018 Wire Phase 5 repository and service dependency providers in `backend/app/modules/ai_insights/dependencies.py`
-- [ ] T019 Register Phase 5 route placeholders under the existing `/api/v1/ai-insights` router composition in `backend/app/modules/ai_insights/router.py` and `backend/app/api/router.py`
-- [ ] T020 [P] Define frontend Zod schemas and TypeScript types for Phase 5 API payloads in `frontend/features/ai-insights/schemas.ts`
-- [ ] T021 [P] Define frontend query keys for current result, result detail, generate mutation, rerun mutation, and history list in `frontend/features/ai-insights/query-keys.ts`
-- [ ] T022 [P] Implement Phase 5 API client functions for generate, current, detail, rerun, and history endpoints in `frontend/features/ai-insights/api.ts`
+- [X] T006 [P] Add migration tests for `AIInsightResult` and `AIInsightResultSource` tables, indexes, JSON fields, soft delete, and current-result constraints in `backend/tests/migrations/test_insight_results_migration.py`
+- [X] T007 [P] Add model tests for Phase 5 result fields, source relationships, status values, and soft-delete defaults in `backend/tests/domain/test_ai_insight_results.py`
+- [X] T008 [P] Add exception mapping tests for missing analysis, invalid source analysis, result validation failure, idempotency conflict, and result not found in `backend/tests/api/test_ai_insight_results_api_errors.py`
+- [X] T009 Define Phase 5 constants for period granularity, result status, score state, confidence, generation reason, validator version, pagination defaults, and rate-limit names in `backend/app/modules/ai_insights/constants.py`
+- [X] T010 Define Phase 5 custom exceptions for invalid insight period, missing source analysis, invalid source analysis, insight result not found, generation conflict, and insight validation failure in `backend/app/modules/ai_insights/exceptions.py`
+- [X] T011 Add Phase 5 exception mappings to unified error handling in `backend/app/core/exceptions.py`
+- [X] T012 Add or verify `ai_insights:read` and `ai_insights:write` scope support for Phase 5 endpoints in `backend/app/api/dependencies.py`
+- [X] T013 Extend AI insights ORM models with `AIInsightResult` and `AIInsightResultSource` in `backend/app/modules/ai_insights/models.py`
+- [X] T014 Add Alembic migration for Phase 5 insight result tables, source links, JSON payload columns, indexes, current marker, and soft delete in `backend/alembic/versions/006_insights_recommendations.py`
+- [X] T015 Define base Phase 5 schemas for insight period requests, result status, source snapshot, score outcome, score factor, evidence, validation outcome, and paginated result responses in `backend/app/modules/ai_insights/schemas.py`
+- [X] T016 Implement base result repository methods for create, get by owner, current lookup, source links, default-generation reuse lookup, current marker updates, soft-delete exclusion, and paginated history in `backend/app/modules/ai_insights/repositories/ai_insight_result_repository.py`
+- [X] T017 Extend AI insight run repository methods for completed source analysis lookup by owner, period, granularity, and optional run ID in `backend/app/modules/ai_insights/repositories/ai_insight_run_repository.py`
+- [X] T018 Wire Phase 5 repository and service dependency providers in `backend/app/modules/ai_insights/dependencies.py`
+- [X] T019 Register Phase 5 route placeholders under the existing `/api/v1/ai-insights` router composition in `backend/app/modules/ai_insights/router.py` and `backend/app/api/router.py`
+- [X] T020 [P] Define frontend Zod schemas and TypeScript types for Phase 5 API payloads in `frontend/features/ai-insights/schemas.ts`
+- [X] T021 [P] Define frontend query keys for current result, result detail, generate mutation, rerun mutation, and history list in `frontend/features/ai-insights/query-keys.ts`
+- [X] T022 [P] Implement Phase 5 API client functions for generate, current, detail, rerun, and history endpoints in `frontend/features/ai-insights/api.ts`
 
 **Checkpoint**: Persistence, contracts, errors, dependency wiring, and frontend API foundations are ready. User story implementation can begin.
 
@@ -61,32 +61,32 @@
 
 ### Tests for User Story 1
 
-- [ ] T023 [P] [US1] Add source service tests for daily/weekly period resolution, completed Phase 4 source analysis lookup, stale-source visibility, saved-fact authority, and note-text exclusion in `backend/tests/services/test_insight_source_service.py`
-- [ ] T024 [P] [US1] Add productivity scoring tests for valid numeric score, insufficient data, positive/limiting factors, evidence count, score bounds, and no-data output in `backend/tests/domain/test_insight_scoring_rules.py`
-- [ ] T025 [P] [US1] Add consistency scoring tests for weekly scored state, daily not-applicable state, fewer-than-three-days insufficient state, and evidence-backed explanation in `backend/tests/domain/test_insight_scoring_rules.py`
-- [ ] T026 [P] [US1] Add insight result repository tests for create, source links, current lookup, owner-scoped detail, default-generation reuse, and soft-delete exclusion in `backend/tests/repositories/test_ai_insight_result_repository.py`
-- [ ] T027 [P] [US1] Add generation service tests for default reuse, source snapshot creation, score validation, failed validation not current, and current marker behavior in `backend/tests/services/test_insight_generation_service.py`
-- [ ] T028 [P] [US1] Add privacy boundary service tests ensuring task note text is excluded from source snapshots, evidence, explanations, and stored payloads in `backend/tests/services/test_insight_privacy_boundary.py`
-- [ ] T029 [P] [US1] Add generate/current/detail API success envelope tests for scored, insufficient-data, no-data, and reused-existing responses in `backend/tests/api/test_ai_insight_results_api.py`
-- [ ] T030 [P] [US1] Add generate/current/detail API error tests for invalid period, missing analysis, failed source analysis, malformed source analysis, auth, permission, validation failure, and rate-limit envelopes in `backend/tests/api/test_ai_insight_results_api_errors.py`
-- [ ] T031 [P] [US1] Add frontend tests for period selection, score explanations, insufficient-data display, evidence rendering, and reused-current messaging in `frontend/features/ai-insights/components/InsightScores.test.tsx`
+- [X] T023 [P] [US1] Add source service tests for daily/weekly period resolution, completed Phase 4 source analysis lookup, stale-source visibility, saved-fact authority, and note-text exclusion in `backend/tests/services/test_insight_source_service.py`
+- [X] T024 [P] [US1] Add productivity scoring tests for valid numeric score, insufficient data, positive/limiting factors, evidence count, score bounds, and no-data output in `backend/tests/domain/test_insight_scoring_rules.py`
+- [X] T025 [P] [US1] Add consistency scoring tests for weekly scored state, daily not-applicable state, fewer-than-three-days insufficient state, and evidence-backed explanation in `backend/tests/domain/test_insight_scoring_rules.py`
+- [X] T026 [P] [US1] Add insight result repository tests for create, source links, current lookup, owner-scoped detail, default-generation reuse, and soft-delete exclusion in `backend/tests/repositories/test_ai_insight_result_repository.py`
+- [X] T027 [P] [US1] Add generation service tests for default reuse, source snapshot creation, score validation, failed validation not current, and current marker behavior in `backend/tests/services/test_insight_generation_service.py`
+- [X] T028 [P] [US1] Add privacy boundary service tests ensuring task note text is excluded from source snapshots, evidence, explanations, and stored payloads in `backend/tests/services/test_insight_privacy_boundary.py`
+- [X] T029 [P] [US1] Add generate/current/detail API success envelope tests for scored, insufficient-data, no-data, and reused-existing responses in `backend/tests/api/test_ai_insight_results_api.py`
+- [X] T030 [P] [US1] Add generate/current/detail API error tests for invalid period, missing analysis, failed source analysis, malformed source analysis, auth, permission, validation failure, and rate-limit envelopes in `backend/tests/api/test_ai_insight_results_api_errors.py`
+- [X] T031 [P] [US1] Add frontend tests for period selection, score explanations, insufficient-data display, evidence rendering, and reused-current messaging in `frontend/features/ai-insights/components/InsightScores.test.tsx`
 
 ### Implementation for User Story 1
 
-- [ ] T032 [P] [US1] Implement completed source analysis resolution, source tracking summary, source task/evidence extraction, and note-text exclusion in `backend/app/modules/ai_insights/services/insight_source_service.py`
-- [ ] T033 [P] [US1] Implement productivity score rules, positive/limiting factor generation, insufficient-data reasons, confidence, and evidence IDs in `backend/app/modules/ai_insights/services/productivity_scoring_service.py`
-- [ ] T034 [P] [US1] Implement consistency score rules for daily not-applicable, weekly scored state, fewer-than-three-days insufficient state, confidence, and evidence IDs in `backend/app/modules/ai_insights/services/consistency_scoring_service.py`
-- [ ] T035 [US1] Implement score, evidence, source-period, privacy-boundary, and current-result validation checks in `backend/app/modules/ai_insights/services/insight_validation_service.py`
-- [ ] T036 [US1] Implement default deterministic result generation, validation, source link persistence, failed-result handling, and current marker assignment in `backend/app/modules/ai_insights/services/insight_generation_service.py`
-- [ ] T037 [US1] Implement current result lookup, detail lookup, default-generation reuse, and owner-scoped not-found behavior in `backend/app/modules/ai_insights/services/insight_result_service.py`
-- [ ] T038 [US1] Extend result schemas for generate request/response, current result response, detail response, score outcomes, source snapshot, evidence, and validation outcome in `backend/app/modules/ai_insights/schemas.py`
-- [ ] T039 [US1] Implement `POST /api/v1/ai-insights/results/generate`, `GET /api/v1/ai-insights/results/current`, and `GET /api/v1/ai-insights/results/{insight_result_id}` with standard envelopes in `backend/app/modules/ai_insights/router.py`
-- [ ] T040 [US1] Add request-id, owner, period, source analysis, result ID, validation status, and reused-existing structured logs in `backend/app/modules/ai_insights/services/insight_generation_service.py`
-- [ ] T041 [US1] Implement frontend current result, generate mutation, and detail hooks in `frontend/features/ai-insights/hooks/use-current-insight-result.ts` and `frontend/features/ai-insights/hooks/use-generate-insight-result.ts`
-- [ ] T042 [P] [US1] Implement period picker for supported day/week periods only in `frontend/features/ai-insights/components/InsightPeriodPicker.tsx`
-- [ ] T043 [P] [US1] Implement score explanation UI for numeric, insufficient-data, and not-applicable states in `frontend/features/ai-insights/components/ScoreExplanation.tsx`
-- [ ] T044 [P] [US1] Implement evidence list UI that shows source facts and source analysis references without note text in `frontend/features/ai-insights/components/EvidenceList.tsx`
-- [ ] T045 [US1] Compose the MVP insights review page with period picker, generate action, current result, scores, evidence, empty states, and source analysis traceability in `frontend/app/dashboard/ai-insights/page.tsx`
+- [X] T032 [P] [US1] Implement completed source analysis resolution, source tracking summary, source task/evidence extraction, and note-text exclusion in `backend/app/modules/ai_insights/services/insight_source_service.py`
+- [X] T033 [P] [US1] Implement productivity score rules, positive/limiting factor generation, insufficient-data reasons, confidence, and evidence IDs in `backend/app/modules/ai_insights/services/productivity_scoring_service.py`
+- [X] T034 [P] [US1] Implement consistency score rules for daily not-applicable, weekly scored state, fewer-than-three-days insufficient state, confidence, and evidence IDs in `backend/app/modules/ai_insights/services/consistency_scoring_service.py`
+- [X] T035 [US1] Implement score, evidence, source-period, privacy-boundary, and current-result validation checks in `backend/app/modules/ai_insights/services/insight_validation_service.py`
+- [X] T036 [US1] Implement default deterministic result generation, validation, source link persistence, failed-result handling, and current marker assignment in `backend/app/modules/ai_insights/services/insight_generation_service.py`
+- [X] T037 [US1] Implement current result lookup, detail lookup, default-generation reuse, and owner-scoped not-found behavior in `backend/app/modules/ai_insights/services/insight_result_service.py`
+- [X] T038 [US1] Extend result schemas for generate request/response, current result response, detail response, score outcomes, source snapshot, evidence, and validation outcome in `backend/app/modules/ai_insights/schemas.py`
+- [X] T039 [US1] Implement `POST /api/v1/ai-insights/results/generate`, `GET /api/v1/ai-insights/results/current`, and `GET /api/v1/ai-insights/results/{insight_result_id}` with standard envelopes in `backend/app/modules/ai_insights/router.py`
+- [X] T040 [US1] Add request-id, owner, period, source analysis, result ID, validation status, and reused-existing structured logs in `backend/app/modules/ai_insights/services/insight_generation_service.py`
+- [X] T041 [US1] Implement frontend current result, generate mutation, and detail hooks in `frontend/features/ai-insights/hooks/use-current-insight-result.ts` and `frontend/features/ai-insights/hooks/use-generate-insight-result.ts`
+- [X] T042 [P] [US1] Implement period picker for supported day/week periods only in `frontend/features/ai-insights/components/InsightPeriodPicker.tsx`
+- [X] T043 [P] [US1] Implement score explanation UI for numeric, insufficient-data, and not-applicable states in `frontend/features/ai-insights/components/ScoreExplanation.tsx`
+- [X] T044 [P] [US1] Implement evidence list UI that shows source facts and source analysis references without note text in `frontend/features/ai-insights/components/EvidenceList.tsx`
+- [X] T045 [US1] Compose the MVP insights review page with period picker, generate action, current result, scores, evidence, empty states, and source analysis traceability in `frontend/app/dashboard/ai-insights/page.tsx`
 
 **Checkpoint**: User Story 1 is independently testable as the MVP score-generation and review flow.
 
@@ -100,20 +100,20 @@
 
 ### Tests for User Story 2
 
-- [ ] T046 [P] [US2] Add day ranking service tests for best day, worst day, tie or close ranking, no meaningful distinction, single outlier, and fewer-than-three-days behavior in `backend/tests/domain/test_day_ranking_rules.py`
-- [ ] T047 [P] [US2] Add validation tests for weekly day-finding evidence references, neutral worst-day language, daily-period omission, and unsupported broad recommendation prevention in `backend/tests/domain/test_day_ranking_rules.py`
-- [ ] T048 [P] [US2] Add API tests for weekly best/worst day payloads, omitted findings, tie explanations, and standard response envelopes in `backend/tests/api/test_ai_insight_results_api.py`
-- [ ] T049 [P] [US2] Add frontend DayFindings rendering tests for best/worst labels, neutral wording, omitted states, and tie explanations in `frontend/features/ai-insights/components/DayFindings.test.tsx`
+- [X] T046 [P] [US2] Add day ranking service tests for best day, worst day, tie or close ranking, no meaningful distinction, single outlier, and fewer-than-three-days behavior in `backend/tests/domain/test_day_ranking_rules.py`
+- [X] T047 [P] [US2] Add validation tests for weekly day-finding evidence references, neutral worst-day language, daily-period omission, and unsupported broad recommendation prevention in `backend/tests/domain/test_day_ranking_rules.py`
+- [X] T048 [P] [US2] Add API tests for weekly best/worst day payloads, omitted findings, tie explanations, and standard response envelopes in `backend/tests/api/test_ai_insight_results_api.py`
+- [X] T049 [P] [US2] Add frontend DayFindings rendering tests for best/worst labels, neutral wording, omitted states, and tie explanations in `frontend/features/ai-insights/components/DayFindings.test.tsx`
 
 ### Implementation for User Story 2
 
-- [ ] T050 [P] [US2] Implement weekly day ranking rules, tie detection, no-meaningful-distinction detection, outlier handling, and neutral summaries in `backend/app/modules/ai_insights/services/day_ranking_service.py`
-- [ ] T051 [US2] Extend validation checks for best/worst day evidence, daily omission, three-tracked-day minimum, neutral language, and meaningful distinction in `backend/app/modules/ai_insights/services/insight_validation_service.py`
-- [ ] T052 [US2] Integrate day ranking into deterministic generation after scoring and before result validation in `backend/app/modules/ai_insights/services/insight_generation_service.py`
-- [ ] T053 [US2] Extend schemas for best day, worst day, no-meaningful-distinction, tie flags, and day-finding confidence in `backend/app/modules/ai_insights/schemas.py`
-- [ ] T054 [US2] Ensure result detail, current result, and generate responses serialize day findings consistently in `backend/app/modules/ai_insights/router.py`
-- [ ] T055 [US2] Implement day findings UI for weekly best/worst findings, omitted states, tie explanations, and neutral weak-day copy in `frontend/features/ai-insights/components/DayFindings.tsx`
-- [ ] T056 [US2] Integrate day findings into the insights review page below score explanations in `frontend/app/dashboard/ai-insights/page.tsx`
+- [X] T050 [P] [US2] Implement weekly day ranking rules, tie detection, no-meaningful-distinction detection, outlier handling, and neutral summaries in `backend/app/modules/ai_insights/services/day_ranking_service.py`
+- [X] T051 [US2] Extend validation checks for best/worst day evidence, daily omission, three-tracked-day minimum, neutral language, and meaningful distinction in `backend/app/modules/ai_insights/services/insight_validation_service.py`
+- [X] T052 [US2] Integrate day ranking into deterministic generation after scoring and before result validation in `backend/app/modules/ai_insights/services/insight_generation_service.py`
+- [X] T053 [US2] Extend schemas for best day, worst day, no-meaningful-distinction, tie flags, and day-finding confidence in `backend/app/modules/ai_insights/schemas.py`
+- [X] T054 [US2] Ensure result detail, current result, and generate responses serialize day findings consistently in `backend/app/modules/ai_insights/router.py`
+- [X] T055 [US2] Implement day findings UI for weekly best/worst findings, omitted states, tie explanations, and neutral weak-day copy in `frontend/features/ai-insights/components/DayFindings.tsx`
+- [X] T056 [US2] Integrate day findings into the insights review page below score explanations in `frontend/app/dashboard/ai-insights/page.tsx`
 
 **Checkpoint**: User Stories 1 and 2 are independently testable; weekly insights can explain relative day comparisons without overstating differences.
 
@@ -127,28 +127,28 @@
 
 ### Tests for User Story 3
 
-- [ ] T057 [P] [US3] Add recommendation service tests for actionability, evidence requirements, priority ordering, confidence, expected benefit, omitted unsupported themes, and max-three cap in `backend/tests/domain/test_recommendation_validation.py`
-- [ ] T058 [P] [US3] Add duplicate/generic/medical/character-claim validation tests in `backend/tests/domain/test_recommendation_validation.py`
-- [ ] T059 [P] [US3] Add recommendation generation service tests for links to score factors, day findings, Phase 4 observations, dedupe keys, and no useful recommendation states in `backend/tests/services/test_insight_generation_service.py`
-- [ ] T060 [P] [US3] Add result idempotency and rerun tests for default reuse, explicit rerun new history, latest successful current marker, and prior result preservation in `backend/tests/services/test_insight_result_idempotency.py`
-- [ ] T061 [P] [US3] Add paginated history repository tests for newest-first ordering, filters, current marker, failed result exclusion from current, and soft-delete exclusion in `backend/tests/repositories/test_ai_insight_result_repository.py`
-- [ ] T062 [P] [US3] Add API tests for rerun, history pagination, recommendation payloads, duplicate prevention, and result detail review in `backend/tests/api/test_ai_insight_results_api.py`
-- [ ] T063 [P] [US3] Add frontend tests for recommendations, no-recommendation state, rerun action, result history, source period, and source analysis reference in `frontend/features/ai-insights/components/RecommendationAndHistory.test.tsx`
+- [X] T057 [P] [US3] Add recommendation service tests for actionability, evidence requirements, priority ordering, confidence, expected benefit, omitted unsupported themes, and max-three cap in `backend/tests/domain/test_recommendation_validation.py`
+- [X] T058 [P] [US3] Add duplicate/generic/medical/character-claim validation tests in `backend/tests/domain/test_recommendation_validation.py`
+- [X] T059 [P] [US3] Add recommendation generation service tests for links to score factors, day findings, Phase 4 observations, dedupe keys, and no useful recommendation states in `backend/tests/services/test_insight_generation_service.py`
+- [X] T060 [P] [US3] Add result idempotency and rerun tests for default reuse, explicit rerun new history, latest successful current marker, and prior result preservation in `backend/tests/services/test_insight_result_idempotency.py`
+- [X] T061 [P] [US3] Add paginated history repository tests for newest-first ordering, filters, current marker, failed result exclusion from current, and soft-delete exclusion in `backend/tests/repositories/test_ai_insight_result_repository.py`
+- [X] T062 [P] [US3] Add API tests for rerun, history pagination, recommendation payloads, duplicate prevention, and result detail review in `backend/tests/api/test_ai_insight_results_api.py`
+- [X] T063 [P] [US3] Add frontend tests for recommendations, no-recommendation state, rerun action, result history, source period, and source analysis reference in `frontend/features/ai-insights/components/RecommendationAndHistory.test.tsx`
 
 ### Implementation for User Story 3
 
-- [ ] T064 [P] [US3] Implement recommendation generation rules, priority ordering, confidence assignment, expected benefit text, source links, and dedupe keys in `backend/app/modules/ai_insights/services/recommendation_service.py`
-- [ ] T065 [US3] Extend validation checks for recommendation count, actionability, user-controlled actions, evidence, duplicate/generic wording, medical claims, character claims, and unsupported claims in `backend/app/modules/ai_insights/services/insight_validation_service.py`
-- [ ] T066 [US3] Integrate recommendation generation into deterministic generation after scoring and day findings in `backend/app/modules/ai_insights/services/insight_generation_service.py`
-- [ ] T067 [US3] Extend result service for explicit rerun creation, previous-current clearing, latest-successful current marker, history filters, and pagination validation in `backend/app/modules/ai_insights/services/insight_result_service.py`
-- [ ] T068 [US3] Extend result repository methods for explicit rerun persistence, paginated history filters, dedupe-key history lookup, previous-current clearing, and failed-result history records in `backend/app/modules/ai_insights/repositories/ai_insight_result_repository.py`
-- [ ] T069 [US3] Extend schemas for recommendation, recommendation source links, rerun response, history filters, and paginated result page in `backend/app/modules/ai_insights/schemas.py`
-- [ ] T070 [US3] Implement `POST /api/v1/ai-insights/results/{insight_result_id}/rerun` and `GET /api/v1/ai-insights/results` with page/limit pagination and standard envelopes in `backend/app/modules/ai_insights/router.py`
-- [ ] T071 [US3] Add explicit rerun, history pagination, recommendation validation, dedupe decision, and current marker structured logs in `backend/app/modules/ai_insights/services/insight_result_service.py`
-- [ ] T072 [US3] Implement frontend result history and rerun hooks in `frontend/features/ai-insights/hooks/use-insight-result-history.ts` and `frontend/features/ai-insights/hooks/use-rerun-insight-result.ts`
-- [ ] T073 [P] [US3] Implement recommendation list UI with action, rationale, expected benefit, confidence, priority, source links, and no-recommendation state in `frontend/features/ai-insights/components/RecommendationList.tsx`
-- [ ] T074 [P] [US3] Implement insight history list UI with current marker, generated timestamp, source period, source analysis reference, and rerun action in `frontend/features/ai-insights/components/InsightHistoryList.tsx`
-- [ ] T075 [US3] Integrate recommendations, history, and explicit rerun behavior into the insights review page in `frontend/app/dashboard/ai-insights/page.tsx`
+- [X] T064 [P] [US3] Implement recommendation generation rules, priority ordering, confidence assignment, expected benefit text, source links, and dedupe keys in `backend/app/modules/ai_insights/services/recommendation_service.py`
+- [X] T065 [US3] Extend validation checks for recommendation count, actionability, user-controlled actions, evidence, duplicate/generic wording, medical claims, character claims, and unsupported claims in `backend/app/modules/ai_insights/services/insight_validation_service.py`
+- [X] T066 [US3] Integrate recommendation generation into deterministic generation after scoring and day findings in `backend/app/modules/ai_insights/services/insight_generation_service.py`
+- [X] T067 [US3] Extend result service for explicit rerun creation, previous-current clearing, latest-successful current marker, history filters, and pagination validation in `backend/app/modules/ai_insights/services/insight_result_service.py`
+- [X] T068 [US3] Extend result repository methods for explicit rerun persistence, paginated history filters, dedupe-key history lookup, previous-current clearing, and failed-result history records in `backend/app/modules/ai_insights/repositories/ai_insight_result_repository.py`
+- [X] T069 [US3] Extend schemas for recommendation, recommendation source links, rerun response, history filters, and paginated result page in `backend/app/modules/ai_insights/schemas.py`
+- [X] T070 [US3] Implement `POST /api/v1/ai-insights/results/{insight_result_id}/rerun` and `GET /api/v1/ai-insights/results` with page/limit pagination and standard envelopes in `backend/app/modules/ai_insights/router.py`
+- [X] T071 [US3] Add explicit rerun, history pagination, recommendation validation, dedupe decision, and current marker structured logs in `backend/app/modules/ai_insights/services/insight_result_service.py`
+- [X] T072 [US3] Implement frontend result history and rerun hooks in `frontend/features/ai-insights/hooks/use-insight-result-history.ts` and `frontend/features/ai-insights/hooks/use-rerun-insight-result.ts`
+- [X] T073 [P] [US3] Implement recommendation list UI with action, rationale, expected benefit, confidence, priority, source links, and no-recommendation state in `frontend/features/ai-insights/components/RecommendationList.tsx`
+- [X] T074 [P] [US3] Implement insight history list UI with current marker, generated timestamp, source period, source analysis reference, and rerun action in `frontend/features/ai-insights/components/InsightHistoryList.tsx`
+- [X] T075 [US3] Integrate recommendations, history, and explicit rerun behavior into the insights review page in `frontend/app/dashboard/ai-insights/page.tsx`
 
 **Checkpoint**: All Phase 5 user stories are independently functional and insights are scoreable, comparable, recommendable, rerunnable, traceable, and reviewable.
 
@@ -158,20 +158,20 @@
 
 **Purpose**: Verify consistency, documentation, contracts, tests, and out-of-scope boundaries across Phase 5.
 
-- [ ] T076 [P] Update API contract examples after implementation in `specs/006-insights-recommendations/contracts/insights-recommendations-api.yaml`
-- [ ] T077 [P] Update quickstart implementation checks after final endpoint/component names settle in `specs/006-insights-recommendations/quickstart.md`
-- [ ] T078 [P] Update AI insights module documentation for Phase 5 scoring, day findings, recommendations, history, privacy, and deterministic-generation ownership in `backend/app/modules/ai_insights/README.md`
-- [ ] T079 [P] Update frontend AI insights feature documentation for review flow and supported day/week periods in `frontend/features/ai-insights/README.md`
-- [ ] T080 Run targeted backend Phase 5 tests from `specs/006-insights-recommendations/quickstart.md`
-- [ ] T081 Run full backend test suite with `pytest -q` from `backend/`
-- [ ] T082 Run frontend tests with `npm run test` from `frontend/`
-- [ ] T083 Run frontend production build with `npm run build` from `frontend/`
+- [X] T076 [P] Update API contract examples after implementation in `specs/006-insights-recommendations/contracts/insights-recommendations-api.yaml`
+- [X] T077 [P] Update quickstart implementation checks after final endpoint/component names settle in `specs/006-insights-recommendations/quickstart.md`
+- [X] T078 [P] Update AI insights module documentation for Phase 5 scoring, day findings, recommendations, history, privacy, and deterministic-generation ownership in `backend/app/modules/ai_insights/README.md`
+- [X] T079 [P] Update frontend AI insights feature documentation for review flow and supported day/week periods in `frontend/features/ai-insights/README.md`
+- [X] T080 Run targeted backend Phase 5 tests from `specs/006-insights-recommendations/quickstart.md`
+- [X] T081 Run full backend test suite with `pytest -q` from `backend/`
+- [X] T082 Run frontend tests with `npm run test` from `frontend/`
+- [X] T083 Run frontend production build with `npm run build` from `frontend/`
 - [ ] T084 Run the manual API and frontend smoke checks from `specs/006-insights-recommendations/quickstart.md`
-- [ ] T085 Review `backend/app/modules/ai_insights/router.py`, `backend/app/modules/ai_insights/services/insight_generation_service.py`, `backend/app/modules/ai_insights/services/insight_result_service.py`, and `backend/app/modules/ai_insights/repositories/ai_insight_result_repository.py` for Router -> Service -> Repository -> Database boundary compliance
-- [ ] T086 Verify all handled Phase 5 API responses use standard success/error envelopes across `backend/app/modules/ai_insights/router.py` and `backend/app/core/exceptions.py`
-- [ ] T087 Verify Phase 5 excludes note text from source snapshots, evidence, score explanations, day findings, recommendations, and frontend rendering across `backend/app/modules/ai_insights/services/`, `backend/app/modules/ai_insights/schemas.py`, and `frontend/features/ai-insights/`
-- [ ] T088 Verify Phase 5 does not add new AI provider calls, scheduled automation, CSV import behavior, dashboard redesign, report export, Notion synchronization, AI chat, month insight periods, or custom date ranges across `backend/app/modules/ai_insights/`, `backend/app/workers/tasks/`, and `frontend/features/ai-insights/`
-- [ ] T089 Verify current-result idempotency, explicit rerun history, soft-delete exclusion, pagination, auth scopes, rate limits, and structured logging by reviewing `backend/app/modules/ai_insights/services/insight_result_service.py`, `backend/app/modules/ai_insights/repositories/ai_insight_result_repository.py`, and `backend/app/modules/ai_insights/router.py`
+- [X] T085 Review `backend/app/modules/ai_insights/router.py`, `backend/app/modules/ai_insights/services/insight_generation_service.py`, `backend/app/modules/ai_insights/services/insight_result_service.py`, and `backend/app/modules/ai_insights/repositories/ai_insight_result_repository.py` for Router -> Service -> Repository -> Database boundary compliance
+- [X] T086 Verify all handled Phase 5 API responses use standard success/error envelopes across `backend/app/modules/ai_insights/router.py` and `backend/app/core/exceptions.py`
+- [X] T087 Verify Phase 5 excludes note text from source snapshots, evidence, score explanations, day findings, recommendations, and frontend rendering across `backend/app/modules/ai_insights/services/`, `backend/app/modules/ai_insights/schemas.py`, and `frontend/features/ai-insights/`
+- [X] T088 Verify Phase 5 does not add new AI provider calls, scheduled automation, CSV import behavior, dashboard redesign, report export, Notion synchronization, AI chat, month insight periods, or custom date ranges across `backend/app/modules/ai_insights/`, `backend/app/workers/tasks/`, and `frontend/features/ai-insights/`
+- [X] T089 Verify current-result idempotency, explicit rerun history, soft-delete exclusion, pagination, auth scopes, rate limits, and structured logging by reviewing `backend/app/modules/ai_insights/services/insight_result_service.py`, `backend/app/modules/ai_insights/repositories/ai_insight_result_repository.py`, and `backend/app/modules/ai_insights/router.py`
 
 ---
 

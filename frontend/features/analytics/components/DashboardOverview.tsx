@@ -9,11 +9,14 @@ import { DashboardShell } from "@/components/layout/DashboardShell";
 import { useDashboardOverview } from "../hooks";
 import type { PeriodType } from "../types";
 import { todayIsoDate } from "../utils";
+import { AIInsightsPanel } from "./AIInsightsPanel";
 import { DailyLogsList } from "./DailyLogsList";
 import { DashboardFilters } from "./DashboardFilters";
 import { DayDetailView } from "./DayDetailView";
 import { EmptyState } from "./EmptyState";
 import { SummaryCards } from "./SummaryCards";
+import { TasksTable } from "./TasksTable";
+import { WeeklyActivityHeatmap } from "./WeeklyActivityHeatmap";
 
 export function DashboardOverview() {
   const [periodType, setPeriodType] = useState<PeriodType>("day");
@@ -46,7 +49,7 @@ export function DashboardOverview() {
       />
 
       {dashboardQuery.isLoading ? (
-        <div className="rounded-lg border border-line bg-white p-6 text-sm text-gray-600">Loading dashboard...</div>
+        <div className="rounded-3xl border border-line bg-white p-6 text-sm text-muted shadow-card">Loading dashboard...</div>
       ) : null}
 
       {dashboardQuery.isError ? (
@@ -57,15 +60,18 @@ export function DashboardOverview() {
         <>
           <SummaryCards summary={dashboardQuery.data.summary} />
           {dashboardQuery.data.empty_state ? <EmptyState message={dashboardQuery.data.empty_state.message} /> : null}
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,26rem)]">
-            <div className="grid gap-6">
+          <div className="grid gap-6 xl:grid-cols-[minmax(0,1.7fr)_minmax(24rem,0.8fr)]">
+            <div className="grid min-w-0 gap-6">
               <PeriodTimeTimeline points={showTimeline} />
-              <div className="grid gap-6 xl:grid-cols-2">
+              <div className="grid gap-6 2xl:grid-cols-2">
                 <CategoryBreakdownChart items={dashboardQuery.data.category_breakdown} />
                 <TagBreakdownChart items={dashboardQuery.data.tag_breakdown} notice={dashboardQuery.data.tag_total_notice} />
               </div>
+              <WeeklyActivityHeatmap logs={dashboardQuery.data.daily_logs} />
+              <TasksTable selectedDate={selectedDate} />
             </div>
-            <div className="grid content-start gap-6">
+            <div className="grid min-w-0 content-start gap-6">
+              <AIInsightsPanel summary={dashboardQuery.data.summary} />
               <DailyLogsList
                 logs={dashboardQuery.data.daily_logs}
                 selectedDate={selectedDate}

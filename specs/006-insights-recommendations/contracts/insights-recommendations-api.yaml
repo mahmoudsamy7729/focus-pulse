@@ -1,0 +1,495 @@
+openapi: 3.1.0
+info:
+  title: FocusPulse Insights & Recommendations API
+  version: 0.1.0
+  description: Phase 5 contract for deterministic insight results, scores, day findings, recommendations, evidence, and result history.
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+paths:
+  /ai-insights/results/generate:
+    post:
+      summary: Generate or reuse a deterministic insight result for a day or week
+      operationId: generateInsightResult
+      security:
+        - bearerAuth: [ai_insights:write]
+      x-rate-limit: { limit: 10, window: 1 minute }
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: false
+          schema: { type: string, minLength: 8, maxLength: 128 }
+        - name: X-Request-Id
+          in: header
+          required: false
+          schema: { type: string, minLength: 1, maxLength: 128 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/InsightResultGenerateRequest" }
+            examples:
+              weekly:
+                value:
+                  period_granularity: weekly
+                  anchor_date: "2026-04-15"
+      responses:
+        "200":
+          description: Existing current result returned for the same period and source analysis.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/InsightResultMutationSuccess" }
+        "201":
+          description: New completed insight result created.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/InsightResultMutationSuccess" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/AuthError" }
+        "403": { $ref: "#/components/responses/PermissionError" }
+        "404": { $ref: "#/components/responses/MissingAnalysisError" }
+        "409": { $ref: "#/components/responses/ConflictError" }
+        "422": { $ref: "#/components/responses/GenerationValidationError" }
+        "429": { $ref: "#/components/responses/RateLimitError" }
+  /ai-insights/results:
+    get:
+      summary: List insight result history
+      operationId: listInsightResults
+      security:
+        - bearerAuth: [ai_insights:read]
+      x-rate-limit: { limit: 60, window: 1 minute }
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/Limit"
+        - name: period_granularity
+          in: query
+          required: false
+          schema: { type: string, enum: [daily, weekly] }
+        - name: status
+          in: query
+          required: false
+          schema: { $ref: "#/components/schemas/InsightResultStatus" }
+        - name: start_date
+          in: query
+          required: false
+          schema: { type: string, format: date }
+        - name: end_date
+          in: query
+          required: false
+          schema: { type: string, format: date }
+      responses:
+        "200":
+          description: Paginated insight result history.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/InsightResultPageSuccess" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/AuthError" }
+        "403": { $ref: "#/components/responses/PermissionError" }
+        "429": { $ref: "#/components/responses/RateLimitError" }
+  /ai-insights/results/current:
+    get:
+      summary: Get the current completed insight result for a day or week
+      operationId: getCurrentInsightResult
+      security:
+        - bearerAuth: [ai_insights:read]
+      x-rate-limit: { limit: 60, window: 1 minute }
+      parameters:
+        - name: period_granularity
+          in: query
+          required: true
+          schema: { type: string, enum: [daily, weekly] }
+        - name: anchor_date
+          in: query
+          required: true
+          schema: { type: string, format: date }
+      responses:
+        "200":
+          description: Current insight result for the resolved period, or null when no result exists.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CurrentInsightResultSuccess" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/AuthError" }
+        "403": { $ref: "#/components/responses/PermissionError" }
+        "429": { $ref: "#/components/responses/RateLimitError" }
+  /ai-insights/results/{insight_result_id}:
+    get:
+      summary: Get one insight result with scores, recommendations, evidence, and validation details
+      operationId: getInsightResult
+      security:
+        - bearerAuth: [ai_insights:read]
+      x-rate-limit: { limit: 60, window: 1 minute }
+      parameters:
+        - $ref: "#/components/parameters/InsightResultId"
+      responses:
+        "200":
+          description: Insight result detail.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/InsightResultSuccess" }
+        "401": { $ref: "#/components/responses/AuthError" }
+        "403": { $ref: "#/components/responses/PermissionError" }
+        "404": { $ref: "#/components/responses/NotFoundError" }
+  /ai-insights/results/{insight_result_id}/rerun:
+    post:
+      summary: Explicitly rerun insight generation for the same period and source analysis
+      operationId: rerunInsightResult
+      security:
+        - bearerAuth: [ai_insights:write]
+      x-rate-limit: { limit: 5, window: 1 minute }
+      parameters:
+        - $ref: "#/components/parameters/InsightResultId"
+        - name: Idempotency-Key
+          in: header
+          required: false
+          schema: { type: string, minLength: 8, maxLength: 128 }
+      responses:
+        "201":
+          description: New historical insight result created and marked current if validation passed.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/InsightResultMutationSuccess" }
+        "401": { $ref: "#/components/responses/AuthError" }
+        "403": { $ref: "#/components/responses/PermissionError" }
+        "404": { $ref: "#/components/responses/NotFoundError" }
+        "409": { $ref: "#/components/responses/ConflictError" }
+        "422": { $ref: "#/components/responses/GenerationValidationError" }
+        "429": { $ref: "#/components/responses/RateLimitError" }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    InsightResultId:
+      name: insight_result_id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    Page:
+      name: page
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, default: 1 }
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+  responses:
+    ValidationError:
+      description: Invalid period, request, or source analysis selection.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    AuthError:
+      description: Authentication required or invalid.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    PermissionError:
+      description: Authenticated user lacks the required AI insights scope.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    MissingAnalysisError:
+      description: No completed Phase 4 source analysis exists for the selected period.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    ConflictError:
+      description: Conflicting current-result or idempotency request.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    GenerationValidationError:
+      description: Generated result failed validation and was not marked successful.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    RateLimitError:
+      description: Rate limit exceeded.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+    NotFoundError:
+      description: Insight result not found for the current owner.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ErrorResponse" }
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [success, error]
+      properties:
+        success: { type: boolean, const: false }
+        error:
+          type: object
+          required: [code, message, details]
+          properties:
+            code: { type: string, examples: [INSIGHT_RESULT_NOT_FOUND] }
+            message: { type: string }
+            details: { type: object }
+    InsightResultGenerateRequest:
+      type: object
+      required: [period_granularity, anchor_date]
+      properties:
+        period_granularity: { type: string, enum: [daily, weekly] }
+        anchor_date: { type: string, format: date }
+        source_ai_insight_run_id: { type: [string, "null"], format: uuid }
+    InsightResultMutationSuccess:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [result, reused_existing]
+          properties:
+            result: { $ref: "#/components/schemas/InsightResult" }
+            reused_existing: { type: boolean }
+    InsightResultSuccess:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data: { $ref: "#/components/schemas/InsightResult" }
+    CurrentInsightResultSuccess:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data:
+          type: object
+          required: [period_granularity, period_start, period_end, current_result]
+          properties:
+            period_granularity: { type: string, enum: [daily, weekly] }
+            period_start: { type: string, format: date }
+            period_end: { type: string, format: date }
+            current_result:
+              oneOf:
+                - $ref: "#/components/schemas/InsightResult"
+                - type: "null"
+    InsightResultPageSuccess:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data: { $ref: "#/components/schemas/InsightResultPage" }
+    InsightResultPage:
+      type: object
+      required: [page, limit, items]
+      properties:
+        page: { type: integer, minimum: 1 }
+        limit: { type: integer, minimum: 1 }
+        total: { type: integer, minimum: 0 }
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/InsightResult" }
+    InsightResultStatus:
+      type: string
+      enum: [completed, failed]
+    ScoreState:
+      type: string
+      enum: [scored, insufficient_data, not_applicable]
+    Confidence:
+      type: string
+      enum: [low, medium, high]
+    InsightResult:
+      type: object
+      required:
+        - id
+        - status
+        - is_current
+        - period_granularity
+        - period_start
+        - period_end
+        - source_ai_insight_run_id
+        - source_snapshot
+        - productivity_score
+        - recommendations
+        - evidence
+        - validation_outcome
+        - generated_at
+        - created_at
+      properties:
+        id: { type: string, format: uuid }
+        status: { $ref: "#/components/schemas/InsightResultStatus" }
+        is_current: { type: boolean }
+        generation_reason: { type: string, enum: [default_generate, explicit_rerun] }
+        period_granularity: { type: string, enum: [daily, weekly] }
+        period_start: { type: string, format: date }
+        period_end: { type: string, format: date }
+        source_ai_insight_run_id: { type: string, format: uuid }
+        source_snapshot: { $ref: "#/components/schemas/SourceSnapshot" }
+        productivity_score: { $ref: "#/components/schemas/ScoreOutcome" }
+        consistency_score:
+          oneOf:
+            - $ref: "#/components/schemas/ScoreOutcome"
+            - type: "null"
+        best_day_finding:
+          oneOf:
+            - $ref: "#/components/schemas/DayFinding"
+            - type: "null"
+        worst_day_finding:
+          oneOf:
+            - $ref: "#/components/schemas/DayFinding"
+            - type: "null"
+        recommendations:
+          type: array
+          maxItems: 3
+          items: { $ref: "#/components/schemas/Recommendation" }
+        evidence:
+          type: array
+          items: { $ref: "#/components/schemas/InsightEvidence" }
+        validation_outcome: { $ref: "#/components/schemas/InsightValidationOutcome" }
+        failure_code: { type: [string, "null"] }
+        failure_details: { type: [object, "null"] }
+        generated_at: { type: string, format: date-time }
+        created_at: { type: string, format: date-time }
+    SourceSnapshot:
+      type: object
+      required: [daily_log_count, tracked_day_count, task_count, total_minutes, included_fields, excluded_fields]
+      properties:
+        source_daily_log_ids:
+          type: array
+          items: { type: string, format: uuid }
+        source_task_ids:
+          type: array
+          items: { type: string, format: uuid }
+        daily_log_count: { type: integer, minimum: 0 }
+        tracked_day_count: { type: integer, minimum: 0 }
+        task_count: { type: integer, minimum: 0 }
+        total_minutes: { type: integer, minimum: 0 }
+        category_totals:
+          type: array
+          items: { $ref: "#/components/schemas/NamedMinuteTotal" }
+        tag_totals:
+          type: array
+          items: { $ref: "#/components/schemas/NamedMinuteTotal" }
+        daily_totals:
+          type: array
+          items: { $ref: "#/components/schemas/DateMinuteTotal" }
+        phase4_observation_ids:
+          type: array
+          items: { type: string }
+        included_fields:
+          type: array
+          items: { type: string }
+          examples: [[task_names, durations, categories, tags]]
+        excluded_fields:
+          type: array
+          items: { type: string }
+          examples: [[note_text]]
+    ScoreOutcome:
+      type: object
+      required: [score_type, state, confidence, summary, positive_factors, limiting_factors, evidence_ids]
+      properties:
+        score_type: { type: string, enum: [productivity, consistency] }
+        state: { $ref: "#/components/schemas/ScoreState" }
+        score: { type: [integer, "null"], minimum: 0, maximum: 100 }
+        confidence: { $ref: "#/components/schemas/Confidence" }
+        summary: { type: string }
+        positive_factors:
+          type: array
+          items: { $ref: "#/components/schemas/ScoreFactor" }
+        limiting_factors:
+          type: array
+          items: { $ref: "#/components/schemas/ScoreFactor" }
+        evidence_ids:
+          type: array
+          items: { type: string }
+        insufficient_data_reason: { type: [string, "null"] }
+    ScoreFactor:
+      type: object
+      required: [label, direction, explanation, evidence_ids]
+      properties:
+        label: { type: string }
+        direction: { type: string, enum: [positive, limiting] }
+        explanation: { type: string }
+        evidence_ids:
+          type: array
+          minItems: 1
+          items: { type: string }
+    DayFinding:
+      type: object
+      required: [finding_type, label, summary, confidence, evidence_ids, tie_or_close_ranking]
+      properties:
+        finding_type: { type: string, enum: [best_day, worst_day, no_meaningful_distinction] }
+        date: { type: [string, "null"], format: date }
+        label: { type: string }
+        summary: { type: string }
+        confidence: { $ref: "#/components/schemas/Confidence" }
+        evidence_ids:
+          type: array
+          items: { type: string }
+        tie_or_close_ranking: { type: boolean }
+    Recommendation:
+      type: object
+      required: [recommendation_id, priority, action, rationale, expected_benefit, confidence, evidence_ids, source_links, dedupe_key]
+      properties:
+        recommendation_id: { type: string }
+        priority: { type: integer, minimum: 1, maximum: 3 }
+        action: { type: string }
+        rationale: { type: string }
+        expected_benefit: { type: string }
+        confidence: { $ref: "#/components/schemas/Confidence" }
+        evidence_ids:
+          type: array
+          minItems: 1
+          items: { type: string }
+        source_links:
+          type: array
+          items: { type: string }
+        dedupe_key: { type: string }
+    InsightEvidence:
+      type: object
+      required: [evidence_id, evidence_type, summary]
+      properties:
+        evidence_id: { type: string }
+        evidence_type:
+          type: string
+          enum: [date_total, category_total, tag_total, task_count, task_reference, duration_outlier, phase4_pattern, phase4_behavior_insight]
+        source_date: { type: [string, "null"], format: date }
+        source_task_id: { type: [string, "null"], format: uuid }
+        source_ai_insight_run_id: { type: [string, "null"], format: uuid }
+        source_observation_id: { type: [string, "null"] }
+        label: { type: [string, "null"] }
+        minutes: { type: [integer, "null"], minimum: 0 }
+        count: { type: [integer, "null"], minimum: 0 }
+        summary: { type: string }
+    InsightValidationOutcome:
+      type: object
+      required: [passed, checked_at, validator_version, checks, failure_codes]
+      properties:
+        passed: { type: boolean }
+        checked_at: { type: string, format: date-time }
+        validator_version: { type: string }
+        checks:
+          type: array
+          items:
+            type: object
+            required: [code, passed, blocking]
+            properties:
+              code: { type: string }
+              passed: { type: boolean }
+              blocking: { type: boolean }
+              details: { type: object }
+        failure_codes:
+          type: array
+          items: { type: string }
+    NamedMinuteTotal:
+      type: object
+      required: [label, total_minutes]
+      properties:
+        label: { type: string }
+        total_minutes: { type: integer, minimum: 0 }
+    DateMinuteTotal:
+      type: object
+      required: [date, total_minutes]
+      properties:
+        date: { type: string, format: date }
+        total_minutes: { type: integer, minimum: 0 }

@@ -122,6 +122,33 @@ class AIInsightRunRepository:
         )
         return result.scalars().first()
 
+    async def find_completed_source_analysis(
+        self,
+        owner_id: UUID,
+        target_period_type: str,
+        period_start: date,
+        period_end: date,
+        ai_run_id: UUID | None = None,
+    ) -> AIInsightRun | None:
+        query = (
+            self._active_query()
+            .where(
+                AIInsightRun.owner_id == owner_id,
+                AIInsightRun.target_period_type == target_period_type,
+                AIInsightRun.period_start == period_start,
+                AIInsightRun.period_end == period_end,
+                AIInsightRun.status == RunStatus.COMPLETED.value,
+                AIInsightRun.output_outcome.is_not(None),
+                AIInsightRun.output_summary.is_not(None),
+            )
+            .options(selectinload(AIInsightRun.sources))
+            .order_by(AIInsightRun.completed_at.desc().nullslast(), AIInsightRun.created_at.desc())
+        )
+        if ai_run_id is not None:
+            query = query.where(AIInsightRun.id == ai_run_id)
+        result = await self.session.execute(query)
+        return result.scalars().first()
+
     async def list_for_owner(
         self,
         owner_id: UUID,

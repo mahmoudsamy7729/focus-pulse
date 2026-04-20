@@ -36,3 +36,31 @@ class AIOutputValidationError(AIInsightRunError):
 
 class AIInsightIdempotencyConflictError(AIInsightConflictError):
     """Raised when an idempotency key conflicts with another request."""
+
+
+class InsightResultError(Exception):
+    """Base exception for generated insight result rules."""
+
+
+class InvalidInsightPeriodError(InsightResultError):
+    """Raised when an insight result period is unsupported or malformed."""
+
+
+class MissingSourceAnalysisError(InsightResultError):
+    """Raised when no completed Phase 4 source analysis can be used."""
+
+
+class InvalidSourceAnalysisError(InsightResultError):
+    """Raised when a selected source analysis is failed, incomplete, or mismatched."""
+
+
+class InsightResultNotFoundError(InsightResultError):
+    """Raised when an insight result is not visible to the current owner."""
+
+
+class InsightGenerationConflictError(InsightResultError):
+    """Raised when generation would conflict with an existing request/result."""
+
+
+class InsightValidationFailureError(InsightResultError):
+    """Raised when a generated insight result fails blocking validation."""

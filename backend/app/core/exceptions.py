@@ -21,8 +21,14 @@ from app.modules.ai_insights.exceptions import (
     AIInsightNotFoundError,
     AIOutputValidationError,
     AIProviderFailureError,
+    InsightGenerationConflictError,
+    InsightResultNotFoundError,
+    InsightValidationFailureError,
+    InvalidInsightPeriodError,
+    InvalidSourceAnalysisError,
     InvalidAIInsightStatusTransitionError,
     InvalidAIInsightTargetPeriodError,
+    MissingSourceAnalysisError,
 )
 from app.modules.daily_logs.exceptions import InvalidDailyLogRangeError
 from app.shared.schemas.responses import error_response
@@ -109,6 +115,36 @@ EXCEPTION_MAP: dict[type[Exception], tuple[int, str, str]] = {
         status.HTTP_400_BAD_REQUEST,
         "AI_INSIGHT_STATUS_INVALID",
         "AI insight status transition is invalid.",
+    ),
+    InvalidInsightPeriodError: (
+        status.HTTP_400_BAD_REQUEST,
+        "INSIGHT_PERIOD_INVALID",
+        "Insight result period is invalid.",
+    ),
+    MissingSourceAnalysisError: (
+        status.HTTP_404_NOT_FOUND,
+        "SOURCE_ANALYSIS_MISSING",
+        "No completed source analysis was found.",
+    ),
+    InvalidSourceAnalysisError: (
+        status.HTTP_400_BAD_REQUEST,
+        "SOURCE_ANALYSIS_INVALID",
+        "Source analysis cannot be used for insight generation.",
+    ),
+    InsightResultNotFoundError: (
+        status.HTTP_404_NOT_FOUND,
+        "INSIGHT_RESULT_NOT_FOUND",
+        "Insight result not found.",
+    ),
+    InsightGenerationConflictError: (
+        status.HTTP_409_CONFLICT,
+        "INSIGHT_GENERATION_CONFLICT",
+        "Insight generation conflicts with an existing result.",
+    ),
+    InsightValidationFailureError: (
+        status.HTTP_422_UNPROCESSABLE_ENTITY,
+        "INSIGHT_VALIDATION_FAILED",
+        "Generated insight result failed validation.",
     ),
 }
 

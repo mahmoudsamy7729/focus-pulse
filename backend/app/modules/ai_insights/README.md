@@ -26,3 +26,16 @@ supporting evidence, limitations, generated timestamp, and output outcome. Every
 observation must cite supporting evidence from the selected period. Unsupported
 claims are rejected by output validation or represented as limitations. Celery
 workers stay thin and delegate analysis behavior to module services.
+
+Phase 5 adds deterministic insight results through `AIInsightResult` and
+`AIInsightResultSource`. Result generation consumes completed Phase 4 runs and
+saved tracking summaries, then persists productivity and consistency scores,
+weekly day findings, recommendations, evidence, validation outcome, source
+analysis reference, current marker, and history metadata.
+
+Generation remains synchronous and rule-based. It must not call an AI provider,
+schedule background automation, mutate source logs/tasks/notes/categories, or
+copy note text into snapshots, evidence, explanations, recommendations, API
+responses, or frontend rendering. Default generation reuses the current result
+for the same owner, period, and source analysis. Explicit reruns create history
+and mark the latest successful result current.

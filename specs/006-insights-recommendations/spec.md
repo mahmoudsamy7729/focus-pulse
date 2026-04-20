@@ -5,6 +5,16 @@
 **Status**: Draft  
 **Input**: User description: "Read Plan.md inside docs folder and create specification for Phase 5 - Insights & Recommendations"
 
+## Clarifications
+
+### Session 2026-04-20
+
+- Q: Should Phase 5 generate insights deterministically from saved facts and Phase 4 output, or may it call the AI provider again? -> A: Deterministic rules only; no new AI provider call during Phase 5 generation.
+- Q: What minimum evidence is required before Phase 5 may produce a numeric productivity score? -> A: At least one tracked day, one tracked task, completed source analysis, and at least two supporting evidence points.
+- Q: Which insight periods are supported in Phase 5 v1? -> A: Day and Monday-to-Sunday calendar week insight periods only.
+- Q: What should happen when insights are generated again for the same period and source analysis? -> A: Default generation returns the existing current result; explicit rerun creates a new historical result.
+- Q: What makes a Phase 5 recommendation actionable enough to pass validation? -> A: It has a user-controlled concrete action, supporting evidence, expected benefit, confidence, priority, and no medical or character claims.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Review Explainable Scores (Priority: P1)
@@ -69,7 +79,7 @@ As the project owner, I want a short set of actionable recommendations based on 
 - If AI observations conflict with saved tracking facts, saved tracking facts remain authoritative and unsupported AI observations must not drive scores or recommendations.
 - If a recommendation would be generic, unsupported, repetitive, or unactionable, it must be omitted.
 - If note text exists on source tasks, Phase 5 must preserve the Phase 4 privacy boundary and avoid using or reproducing note text.
-- If multiple insight generations are requested for the same period and source analysis, the system must keep the current result clear and preserve prior result history.
+- If multiple insight generations are requested for the same period and source analysis, default generation must return the existing current result; only an explicit rerun may create a new historical result.
 - If generated scores or recommendations fail validation, the result must not be marked as successfully completed.
 - If the user reviews an older result, the system must make clear which source period and source analysis produced it.
 
@@ -77,9 +87,11 @@ As the project owner, I want a short set of actionable recommendations based on 
 
 ### Functional Requirements
 
-- **FR-001**: The system MUST generate an insight result for a selected calendar week using completed AI analysis output and saved tracking facts for that week.
-- **FR-002**: The system MUST allow a selected calendar day to show day-level productivity scoring and recommendations when enough source analysis and saved tracking facts exist, while omitting best/worst day comparisons for single-day views.
-- **FR-003**: The system MUST produce a productivity score on a 0 to 100 scale when the selected period has enough evidence to support the score.
+- **FR-001**: The system MUST generate an insight result for a selected Monday-to-Sunday calendar week using completed AI analysis output and saved tracking facts for that week.
+- **FR-001a**: Phase 5 insight generation MUST use deterministic application rules over saved tracking facts and completed Phase 4 analysis output; it MUST NOT make a new AI provider call during score or recommendation generation.
+- **FR-002**: The system MUST allow a selected calendar day to show day-level productivity scoring and recommendations when enough source analysis and saved tracking facts exist, while omitting consistency scoring and best/worst day comparisons for single-day views.
+- **FR-002a**: Phase 5 v1 MUST support only selected calendar-day and Monday-to-Sunday calendar-week insight periods; month views and custom date ranges are outside this phase.
+- **FR-003**: The system MUST produce a productivity score on a 0 to 100 scale only when the selected period has at least one tracked day, at least one tracked task, completed source analysis, and at least two supporting evidence points.
 - **FR-004**: The productivity score MUST include a plain-language explanation of the score factors, including the strongest positive factors and the strongest limiting factors.
 - **FR-005**: The system MUST produce a consistency score on a 0 to 100 scale for multi-day periods when at least three tracked days are available.
 - **FR-006**: The consistency score MUST explain the observed day-to-day pattern using tracked-time distribution, recurring categories or tags, task volume, and AI analysis observations when supported by data.
@@ -88,28 +100,28 @@ As the project owner, I want a short set of actionable recommendations based on 
 - **FR-009**: Best and worst day labels MUST be relative to the selected week and MUST include supporting reasons such as tracked time, task mix, category concentration, tag patterns, and relevant AI observations.
 - **FR-010**: The system MUST use neutral language for weak days and recommendations, avoiding shame, blame, medical claims, or claims about the user's character.
 - **FR-011**: The system MUST generate no more than three recommendations for a selected period.
-- **FR-012**: Each recommendation MUST include a concrete action, the reason for the action, the supporting evidence, an expected benefit, and a confidence level.
+- **FR-012**: Each recommendation MUST include a user-controlled concrete action, the reason for the action, supporting evidence, an expected benefit, a confidence level, and a priority.
 - **FR-013**: Recommendations MUST be based on the selected period's saved tracking facts, completed AI analysis output, generated scores, or best/worst day evidence.
 - **FR-014**: The system MUST omit recommendations that are generic, unsupported, duplicative, or not actionable.
 - **FR-015**: The system MUST state when no useful recommendation can be made from the available data.
 - **FR-016**: The system MUST preserve traceability from each insight result to the source period, source analysis result, source tracking summary, generated timestamp, score explanations, best/worst day evidence, and recommendations.
-- **FR-017**: The system MUST validate generated insight results before marking them successful, including score bounds, required explanations, evidence references, recommendation count, and unsupported-claim checks.
+- **FR-017**: The system MUST validate generated insight results before marking them successful, including score bounds, required explanations, evidence references, recommendation count, recommendation actionability, and unsupported-claim checks.
 - **FR-018**: The system MUST store insight results for later review and MUST preserve prior results when insights are regenerated.
 - **FR-019**: When multiple successful insight results exist for the same period, the system MUST clearly identify the latest successful result as the current result.
-- **FR-020**: Regenerating insights for the same period and same source analysis MUST avoid duplicate current results and keep history understandable.
+- **FR-020**: For the same period and same source analysis, default generation MUST return the existing current result instead of creating a duplicate result; an explicit rerun MUST create a new result, preserve prior results as history, and mark the latest successful rerun as current.
 - **FR-021**: The system MUST not mutate source daily logs, tasks, notes, categories, tags, imports, or Phase 4 analysis results when generating Phase 5 insights.
 - **FR-022**: The system MUST preserve the existing privacy boundary by excluding task note text from Phase 5 inputs, explanations, and recommendations.
 - **FR-023**: Phase 5 MUST cover scores, best/worst day identification, recommendations, explanations, result review, and traceability only; scheduled automation, CSV import, dashboard redesign, report export, Notion synchronization, and AI chat are outside this phase.
 
 ### Key Entities *(include if feature involves data)*
 
-- **Insight Result**: A generated Phase 5 result for a selected period, containing score outcomes, best/worst day findings when applicable, recommendations, explanations, traceability, and generation metadata.
+- **Insight Result**: A generated Phase 5 result for a selected calendar day or Monday-to-Sunday calendar week, containing score outcomes, best/worst day findings when applicable, recommendations, explanations, traceability, and generation metadata.
 - **Source Analysis Result**: The completed Phase 4 analysis output used to generate scores and recommendations for the selected period.
 - **Productivity Score**: A 0 to 100 outcome that summarizes productivity signals for a selected period, along with positive factors, limiting factors, evidence, and confidence.
 - **Consistency Score**: A 0 to 100 outcome that summarizes how steady the user's tracked activity and work themes were across a multi-day period, with evidence and confidence.
 - **Best Day Finding**: The strongest day within a selected week, relative to that week only, with reasons and supporting evidence.
 - **Worst Day Finding**: The weakest day within a selected week, relative to that week only, with neutral explanation and supporting evidence.
-- **Recommendation**: A concise suggested action with rationale, supporting evidence, confidence, expected benefit, priority, and source insight links.
+- **Recommendation**: A concise suggested action with rationale, supporting evidence, confidence, expected benefit, priority, source insight links, and validation that the action is user-controlled and avoids medical or character claims.
 - **Recommendation Set**: The complete prioritized list of recommendations for an insight result, capped to prevent noise.
 - **Insight Evidence**: Source facts or AI observations used to justify scores, day findings, or recommendations.
 - **Insight Validation Outcome**: The result of checking that generated scores and recommendations are complete, bounded, evidence-backed, non-duplicative, and safe to show.
@@ -137,13 +149,16 @@ As the project owner, I want a short set of actionable recommendations based on 
 - Phase 1 saved tracking records, Phase 2 import traceability, Phase 3 dashboard views, and Phase 4 completed AI analysis outputs exist before Phase 5 implementation begins.
 - The v1 product remains a personal single-owner productivity tracker.
 - Calendar days use the user's local tracked dates from source records.
-- Weekly insights use Monday-to-Sunday calendar weeks, consistent with earlier dashboard and analysis assumptions.
+- Phase 5 v1 supports calendar-day and Monday-to-Sunday calendar-week insight periods only, consistent with earlier dashboard and analysis assumptions.
 - Productivity and consistency scores are personal, evidence-based summaries for reflection; they are not absolute benchmarks, medical assessments, or judgments of personal worth.
 - Best and worst days are relative labels within the selected week only.
 - At least three tracked days are required for reliable weekly consistency scoring and best/worst day comparison.
+- A numeric productivity score requires at least one tracked day, at least one tracked task, completed source analysis, and at least two supporting evidence points.
 - Recommendations should be limited to the highest-value actions supported by evidence, with no more than three recommendations per result.
+- Actionable recommendations require a user-controlled concrete action, supporting evidence, expected benefit, confidence, priority, and no medical or character claims.
 - Saved tracking records remain authoritative if they conflict with generated AI analysis or generated insight text.
-- Regenerating insights creates a new result and preserves previous insight history.
+- Phase 5 does not perform a new AI inference step; completed Phase 4 analysis output is an input, not an execution dependency to invoke.
+- Explicitly rerunning insights creates a new result and preserves previous insight history; default generation for the same period and source analysis returns the existing current result.
 - The latest successful insight result is the default current result for a period.
 - Phase 5 continues the Phase 4 privacy boundary: task names, durations, categories, and tags may be used, but note text is excluded.
 - The existing docs/Plan.md Phase 5 section is the authoritative input for this specification.

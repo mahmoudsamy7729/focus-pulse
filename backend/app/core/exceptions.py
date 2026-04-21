@@ -7,14 +7,26 @@ from fastapi.responses import JSONResponse
 from app.modules.imports.exceptions import (
     CSVParsingError,
     CSVValidationError,
+    DuplicateImportDueWindowError,
     ImportEnqueueError,
     ImportNotFoundError,
     ImportPermissionError,
+    ImportScheduleConflictError,
+    ImportScheduleNotFoundError,
+    ImportScheduleRetentionError,
+    ImportScheduleRetryExhaustedError,
     InvalidImportOutcomeError,
+    InvalidImportScheduleError,
     InvalidImportStatusTransitionError,
+    NonRetryableImportScheduleFailureError,
+    UnsupportedImportSourceError,
 )
 from app.modules.analytics.exceptions import DashboardDataQualityError, InvalidDashboardPeriodError
 from app.modules.ai_insights.exceptions import (
+    AIAnalysisScheduleConflictError,
+    AIAnalysisScheduleNotFoundError,
+    AIAnalysisScheduleRetentionError,
+    AIAnalysisScheduleRetryExhaustedError,
     AIInsightConflictError,
     AIInsightEnqueueError,
     AIInsightIdempotencyConflictError,
@@ -24,11 +36,15 @@ from app.modules.ai_insights.exceptions import (
     InsightGenerationConflictError,
     InsightResultNotFoundError,
     InsightValidationFailureError,
+    DuplicateAIAnalysisDueWindowError,
     InvalidInsightPeriodError,
     InvalidSourceAnalysisError,
     InvalidAIInsightStatusTransitionError,
     InvalidAIInsightTargetPeriodError,
+    InvalidAIAnalysisScheduleError,
     MissingSourceAnalysisError,
+    NonRetryableAIAnalysisScheduleFailureError,
+    UnsupportedAIAnalysisSourceError,
 )
 from app.modules.daily_logs.exceptions import InvalidDailyLogRangeError
 from app.shared.schemas.responses import error_response
@@ -75,6 +91,46 @@ EXCEPTION_MAP: dict[type[Exception], tuple[int, str, str]] = {
         status.HTTP_400_BAD_REQUEST,
         "IMPORT_STATUS_INVALID",
         "Import status transition is invalid.",
+    ),
+    InvalidImportScheduleError: (
+        status.HTTP_400_BAD_REQUEST,
+        "IMPORT_SCHEDULE_INVALID",
+        "Import schedule is invalid.",
+    ),
+    ImportScheduleNotFoundError: (
+        status.HTTP_404_NOT_FOUND,
+        "IMPORT_SCHEDULE_NOT_FOUND",
+        "Import schedule not found.",
+    ),
+    ImportScheduleConflictError: (
+        status.HTTP_409_CONFLICT,
+        "IMPORT_SCHEDULE_CONFLICT",
+        "Import schedule request conflicts with existing work.",
+    ),
+    DuplicateImportDueWindowError: (
+        status.HTTP_409_CONFLICT,
+        "IMPORT_SCHEDULE_DUPLICATE_WINDOW",
+        "Import schedule due window already exists.",
+    ),
+    UnsupportedImportSourceError: (
+        status.HTTP_400_BAD_REQUEST,
+        "IMPORT_SCHEDULE_SOURCE_UNSUPPORTED",
+        "Import schedule source is unsupported.",
+    ),
+    NonRetryableImportScheduleFailureError: (
+        status.HTTP_422_UNPROCESSABLE_ENTITY,
+        "IMPORT_SCHEDULE_NON_RETRYABLE_FAILURE",
+        "Import schedule failure is not retryable.",
+    ),
+    ImportScheduleRetryExhaustedError: (
+        status.HTTP_409_CONFLICT,
+        "IMPORT_SCHEDULE_RETRY_EXHAUSTED",
+        "Import schedule retry attempts are exhausted.",
+    ),
+    ImportScheduleRetentionError: (
+        status.HTTP_409_CONFLICT,
+        "IMPORT_SCHEDULE_RETENTION_VIOLATION",
+        "Import schedule retention rule was violated.",
     ),
     InvalidAIInsightTargetPeriodError: (
         status.HTTP_400_BAD_REQUEST,
@@ -145,6 +201,46 @@ EXCEPTION_MAP: dict[type[Exception], tuple[int, str, str]] = {
         status.HTTP_422_UNPROCESSABLE_ENTITY,
         "INSIGHT_VALIDATION_FAILED",
         "Generated insight result failed validation.",
+    ),
+    InvalidAIAnalysisScheduleError: (
+        status.HTTP_400_BAD_REQUEST,
+        "AI_ANALYSIS_SCHEDULE_INVALID",
+        "AI analysis schedule is invalid.",
+    ),
+    AIAnalysisScheduleNotFoundError: (
+        status.HTTP_404_NOT_FOUND,
+        "AI_ANALYSIS_SCHEDULE_NOT_FOUND",
+        "AI analysis schedule not found.",
+    ),
+    AIAnalysisScheduleConflictError: (
+        status.HTTP_409_CONFLICT,
+        "AI_ANALYSIS_SCHEDULE_CONFLICT",
+        "AI analysis schedule request conflicts with existing work.",
+    ),
+    DuplicateAIAnalysisDueWindowError: (
+        status.HTTP_409_CONFLICT,
+        "AI_ANALYSIS_SCHEDULE_DUPLICATE_WINDOW",
+        "AI analysis schedule due window already exists.",
+    ),
+    UnsupportedAIAnalysisSourceError: (
+        status.HTTP_400_BAD_REQUEST,
+        "AI_ANALYSIS_SCHEDULE_SOURCE_UNSUPPORTED",
+        "AI analysis schedule source is unsupported.",
+    ),
+    NonRetryableAIAnalysisScheduleFailureError: (
+        status.HTTP_422_UNPROCESSABLE_ENTITY,
+        "AI_ANALYSIS_SCHEDULE_NON_RETRYABLE_FAILURE",
+        "AI analysis schedule failure is not retryable.",
+    ),
+    AIAnalysisScheduleRetryExhaustedError: (
+        status.HTTP_409_CONFLICT,
+        "AI_ANALYSIS_SCHEDULE_RETRY_EXHAUSTED",
+        "AI analysis schedule retry attempts are exhausted.",
+    ),
+    AIAnalysisScheduleRetentionError: (
+        status.HTTP_409_CONFLICT,
+        "AI_ANALYSIS_SCHEDULE_RETENTION_VIOLATION",
+        "AI analysis schedule retention rule was violated.",
     ),
 }
 

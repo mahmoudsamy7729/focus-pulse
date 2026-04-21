@@ -19,3 +19,8 @@ Confirmed imports parse the submitted CSV again on the server, create a pending
 `ImportRun`, enqueue normalized row payloads, and process rows through existing
 daily log, task, note, and trace services. Full raw CSV contents are not stored
 in import history or row snapshots.
+
+Phase 6 import scheduling belongs in this module. Scheduled imports use
+user-configured CSV source references, preserve idempotent schedule/run history,
+and keep the Phase 2 raw CSV non-retention boundary. Shared due-window
+calculation and Celery Beat entry points belong under `backend/app/workers/`.

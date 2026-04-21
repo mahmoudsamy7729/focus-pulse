@@ -64,3 +64,35 @@ class InsightGenerationConflictError(InsightResultError):
 
 class InsightValidationFailureError(InsightResultError):
     """Raised when a generated insight result fails blocking validation."""
+
+
+class InvalidAIAnalysisScheduleError(AIInsightRunError):
+    """Raised when an AI analysis schedule request is invalid."""
+
+
+class AIAnalysisScheduleNotFoundError(AIInsightRunError):
+    """Raised when an owner-scoped AI analysis schedule is not found."""
+
+
+class AIAnalysisScheduleConflictError(AIInsightRunError):
+    """Raised when an AI analysis schedule request conflicts with existing work."""
+
+
+class DuplicateAIAnalysisDueWindowError(AIAnalysisScheduleConflictError):
+    """Raised when a scheduled AI analysis due window already exists."""
+
+
+class UnsupportedAIAnalysisSourceError(AIInsightRunError):
+    """Raised when scheduled AI analysis source inputs are unsupported."""
+
+
+class NonRetryableAIAnalysisScheduleFailureError(AIInsightRunError):
+    """Raised when a scheduled AI analysis failure must not be retried."""
+
+
+class AIAnalysisScheduleRetryExhaustedError(AIInsightRunError):
+    """Raised when scheduled AI analysis reaches its retry limit."""
+
+
+class AIAnalysisScheduleRetentionError(AIInsightRunError):
+    """Raised when AI analysis schedule history retention rules are violated."""

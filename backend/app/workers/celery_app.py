@@ -20,3 +20,10 @@ else:
         task_default_queue=settings.celery.default_queue,
         task_always_eager=settings.celery.task_always_eager,
     )
+    if settings.celery.scheduler_enabled:
+        celery_app.conf.beat_schedule = {
+            "evaluate-due-schedules": {
+                "task": "workers.evaluate_due_schedules",
+                "schedule": settings.celery.beat_schedule_interval_seconds,
+            }
+        }

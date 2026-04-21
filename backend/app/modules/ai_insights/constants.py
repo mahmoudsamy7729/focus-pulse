@@ -16,6 +16,36 @@ class AIInsightOutputOutcome(StrEnum):
     NO_DATA = "no_data"
 
 
+class AIAnalysisAutomationType(StrEnum):
+    SCHEDULED_AI_ANALYSIS = "scheduled_ai_analysis"
+
+
+class AIAnalysisScheduleState(StrEnum):
+    ACTIVE = "active"
+    PAUSED = "paused"
+    DELETED = "deleted"
+
+
+class AIAnalysisScheduleCadence(StrEnum):
+    DAILY = "daily"
+    WEEKLY = "weekly"
+
+
+class AIAnalysisScheduleRunOutcome(StrEnum):
+    STARTED = "started"
+    COMPLETED = "completed"
+    COMPLETED_WITH_ERRORS = "completed_with_errors"
+    FAILED = "failed"
+    SKIPPED = "skipped"
+    NO_DATA = "no_data"
+
+
+class AIAnalysisScheduleFailureClassification(StrEnum):
+    RETRYABLE = "retryable"
+    NON_RETRYABLE = "non_retryable"
+    EXHAUSTED = "exhausted"
+
+
 class InsightResultStatus(StrEnum):
     COMPLETED = "completed"
     FAILED = "failed"
@@ -70,6 +100,10 @@ class AIInsightFailureStage(StrEnum):
 
 AI_INSIGHT_TARGET_PERIODS = {item.value for item in AIInsightTargetPeriod}
 AI_INSIGHT_OUTPUT_OUTCOMES = {item.value for item in AIInsightOutputOutcome}
+AI_ANALYSIS_SCHEDULE_STATES = {item.value for item in AIAnalysisScheduleState}
+AI_ANALYSIS_SCHEDULE_CADENCES = {item.value for item in AIAnalysisScheduleCadence}
+AI_ANALYSIS_SCHEDULE_RUN_OUTCOMES = {item.value for item in AIAnalysisScheduleRunOutcome}
+AI_ANALYSIS_SCHEDULE_FAILURE_CLASSIFICATIONS = {item.value for item in AIAnalysisScheduleFailureClassification}
 INSIGHT_RESULT_STATUSES = {item.value for item in InsightResultStatus}
 INSIGHT_SCORE_STATES = {item.value for item in InsightScoreState}
 INSIGHT_CONFIDENCE_LEVELS = {item.value for item in InsightConfidence}
@@ -82,3 +116,8 @@ AI_INSIGHT_DEFAULT_LIMIT = 20
 AI_INSIGHT_MAX_LIMIT = 100
 AI_INSIGHT_WRITE_RATE_LIMIT_NAME = "ai_insights_write"
 AI_INSIGHT_READ_RATE_LIMIT_NAME = "ai_insights_read"
+AI_ANALYSIS_SCHEDULE_READ_RATE_LIMIT = "ai_analysis_schedule_read"
+AI_ANALYSIS_SCHEDULE_WRITE_RATE_LIMIT = "ai_analysis_schedule_write"
+AI_ANALYSIS_SCHEDULE_TRIGGER_RATE_LIMIT = "ai_analysis_schedule_trigger"
+AI_ANALYSIS_SCHEDULE_RETENTION_DAYS = 90
+AI_ANALYSIS_SCHEDULE_MAX_ATTEMPTS = 3

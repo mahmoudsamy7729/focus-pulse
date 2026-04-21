@@ -39,3 +39,9 @@ copy note text into snapshots, evidence, explanations, recommendations, API
 responses, or frontend rendering. Default generation reuses the current result
 for the same owner, period, and source analysis. Explicit reruns create history
 and mark the latest successful result current.
+
+Phase 6 AI analysis scheduling belongs in this module. Scheduled analysis may
+create or reuse Phase 4 `AIInsightRun` records for completed daily or weekly
+periods, but it must not automatically create Phase 5 `AIInsightResult` records
+or expose note text. Shared due-window calculation and Celery Beat entry points
+belong under `backend/app/workers/`.

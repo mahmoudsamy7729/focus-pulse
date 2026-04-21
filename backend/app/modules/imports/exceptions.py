@@ -28,3 +28,35 @@ class ImportNotFoundError(ImportTraceError):
 
 class ImportEnqueueError(ImportTraceError):
     """Raised when a confirmed import cannot be delegated to the worker."""
+
+
+class InvalidImportScheduleError(ImportTraceError):
+    """Raised when an import schedule request is invalid."""
+
+
+class ImportScheduleNotFoundError(ImportTraceError):
+    """Raised when an owner-scoped import schedule is not found."""
+
+
+class ImportScheduleConflictError(ImportTraceError):
+    """Raised when an import schedule request conflicts with existing work."""
+
+
+class DuplicateImportDueWindowError(ImportScheduleConflictError):
+    """Raised when a scheduled import due window already exists."""
+
+
+class UnsupportedImportSourceError(ImportTraceError):
+    """Raised when a scheduled import source reference is unsupported."""
+
+
+class NonRetryableImportScheduleFailureError(ImportTraceError):
+    """Raised when a scheduled import failure must not be retried."""
+
+
+class ImportScheduleRetryExhaustedError(ImportTraceError):
+    """Raised when a scheduled import reaches its retry limit."""
+
+
+class ImportScheduleRetentionError(ImportTraceError):
+    """Raised when import schedule history retention rules are violated."""
